@@ -1,7 +1,8 @@
-package ru.stqa.pft.addressbook.tests;
+package ru.stqa.pft.addressbook.tests.group_tests;
 
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.tests.TestBase;
 
 public class GroupModificationTests extends TestBase {
 

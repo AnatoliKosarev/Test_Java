@@ -9,6 +9,7 @@ public class ApplicationManager {
   private SessionHelper sessionHelper;
   private NavigationHelper navigationHelper;
   private GroupHelper groupHelper;
+  private ContactHelper contactHelper;
   public StringBuffer verificationErrors = new StringBuffer();
   private String baseUrl;
 
@@ -22,6 +23,7 @@ public class ApplicationManager {
     sessionHelper = new SessionHelper(driver);
     navigationHelper = new NavigationHelper(driver);
     groupHelper = new GroupHelper(driver);
+    contactHelper = new ContactHelper(driver);
     sessionHelper.login("admin", "secret");
   }
 
@@ -31,6 +33,10 @@ public class ApplicationManager {
 
   public GroupHelper getGroupHelper() {
     return groupHelper;
+  }
+
+  public ContactHelper getContactHelper() {
+    return contactHelper;
   }
 
   public NavigationHelper getNavigationHelper() {
