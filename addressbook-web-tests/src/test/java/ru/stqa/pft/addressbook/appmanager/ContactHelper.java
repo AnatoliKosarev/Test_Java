@@ -9,21 +9,18 @@ public class ContactHelper extends HelperBase {
     super(driver);
   }
   public void fillContactForm(ContactData contactData) {
-    driver.findElement(By.name("firstname")).click();
-    driver.findElement(By.name("firstname")).clear();
-    driver.findElement(By.name("firstname")).sendKeys(contactData.getFirstname());
-    driver.findElement(By.name("lastname")).click();
-    driver.findElement(By.name("lastname")).clear();
-    driver.findElement(By.name("lastname")).sendKeys(contactData.getLastname());
-    driver.findElement(By.name("home")).click();
-    driver.findElement(By.name("home")).clear();
-    driver.findElement(By.name("home")).sendKeys(contactData.getPhone());
-    driver.findElement(By.name("email")).click();
-    driver.findElement(By.name("email")).clear();
-    driver.findElement(By.name("email")).sendKeys(contactData.getEmail());
+    type(By.name("firstname"),contactData.getFirstname());
+    type(By.name("lastname"),contactData.getLastname());
+    type(By.name("home"),contactData.getPhone());
+    type(By.name("email"),contactData.getEmail());
   }
 
   public void submitContactCreation() {
-    click(By.name("submit"));
+    click(By.name("update"));
   }
+
+  public void initContactModification() {
+    click(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='test_ignore@test.com'])[1]/following::img[2]"));
+  }
+
 }
