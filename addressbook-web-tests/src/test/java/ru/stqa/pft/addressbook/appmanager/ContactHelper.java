@@ -20,7 +20,7 @@ public class ContactHelper extends HelperBase {
   }
 
   public void initContactModification() {
-    click(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='test_ignore@test.com'])[1]/following::img[2]"));
+    click(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='import'])[1]/following::img[2]"));
   }
 
   public void selectContact() {
