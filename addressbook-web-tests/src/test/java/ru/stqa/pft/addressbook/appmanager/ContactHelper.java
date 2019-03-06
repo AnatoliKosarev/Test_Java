@@ -16,11 +16,26 @@ public class ContactHelper extends HelperBase {
   }
 
   public void submitContactCreation() {
-    click(By.name("update"));
+    click(By.name("submit"));
   }
 
   public void initContactModification() {
     click(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='test_ignore@test.com'])[1]/following::img[2]"));
   }
 
+  public void selectContact() {
+    click(By.name("selected[]"));
+  }
+
+  public void deleteContact() {
+    click(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Select all'])[1]/following::input[2]"));
+  }
+
+  public void acceptAlertDialog () {
+    driver.switchTo().alert().accept();
+  }
+
+  public void updateContact() {
+    click(By.name("update"));
+  }
 }
