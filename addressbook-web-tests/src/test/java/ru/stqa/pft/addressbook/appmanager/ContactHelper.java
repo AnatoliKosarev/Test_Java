@@ -11,6 +11,10 @@ public class ContactHelper extends HelperBase {
     super(driver);
   }
 
+  public void initContactCreation() {
+    click(By.linkText("add new"));
+  }
+
   public void fillContactForm(ContactData contactData, boolean creation) {
     type(By.name("firstname"),contactData.getFirstname());
     type(By.name("lastname"),contactData.getLastname());
@@ -46,5 +50,20 @@ public class ContactHelper extends HelperBase {
 
   public void submitContactModification() {
     click(By.name("update"));
+  }
+
+  public void returntoHomePage() {
+    click(By.linkText("home"));
+  }
+
+  public boolean isThrereAContact() {
+    return isElementPresent(By.name("selected[]"));
+  }
+
+  public void createContact(ContactData contact, boolean creation) {
+    initContactCreation();
+    fillContactForm(contact, true);
+    submitContactCreation();
+    returntoHomePage();
   }
 }

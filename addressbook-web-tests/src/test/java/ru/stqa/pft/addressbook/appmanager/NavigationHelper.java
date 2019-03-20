@@ -19,21 +19,11 @@ public class NavigationHelper extends HelperBase {
     }
   }
 
-  public void gotoContactPage() {
-    if (isElementPresent(By.tagName("h1"))
-        && driver.findElement(By.tagName("h1")).getText().equals("Edit / add address book entry")
-        && isElementPresent(By.name("new_group"))) {
-      return;
-    } else {
-    click(By.linkText("add new"));
-    }
-  }
-
   public void gotoHomePage() {
     if (isElementPresent(By.id("maintable"))) {
-    return;
+      return;
     } else {
-    click(By.linkText("home"));
+      click(By.linkText("home"));
     }
   }
 }
