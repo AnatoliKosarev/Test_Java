@@ -26,6 +26,7 @@ public class GroupModificationTests extends TestBase {
     app.getGroupHelper().submitGroupModification();
     app.getGroupHelper().returntoGroupPage();
     List<GroupData> after = app.getGroupHelper().getGroupList();
+
     Assert.assertEquals(after.size(), before.size());
 
     before.remove(before.size() - 1); //убираем последнюю группу до модифкации
