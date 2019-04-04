@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.tests.TestBase;
 
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 
 public class GroupModificationTests extends TestBase {
@@ -29,8 +29,11 @@ public class GroupModificationTests extends TestBase {
 
     Assert.assertEquals(after.size(), before.size());
 
-    before.remove(before.size() - 1); //убираем последнюю группу до модифкации
-    before.add(group); //добавляем последнюю группу после модификации
-    Assert.assertEquals(new HashSet<Object>(after), new HashSet<Object>(before)); //списки переводим в неупорядоченные и сравниваем
+    before.remove(before.size() - 1); // убираем последнюю группу до модифкации
+    before.add(group); // добавляем последнюю группу после модификации
+    Comparator<? super GroupData> byId = Comparator.comparingInt(GroupData::getId); // сравниваем по идентификатору
+    before.sort(byId); // сортировка по идентификатору
+    after.sort(byId);
+    Assert.assertEquals(after, before); // сравниваем отсортированные по идентификатору списки
   }
 }
