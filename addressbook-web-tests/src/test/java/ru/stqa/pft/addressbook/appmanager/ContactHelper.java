@@ -27,7 +27,7 @@ public class ContactHelper extends HelperBase {
 
     if (creation) { //если creation = true проверяем, что на странице есть элемент "new group", выбираем его
       new Select(driver.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
-    } else { //если creation = false проверяем, что на странице нет элемента "new group"
+    } else { //если creation = false (not creation) проверяем, что на странице нет элемента "new group"
       Assert.assertFalse(isElementPresent(By.name("new_group")));
     }
   }

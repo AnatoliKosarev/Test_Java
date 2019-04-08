@@ -11,7 +11,16 @@ public class ContactData {
   private String group;
 
   public ContactData(String firstname, String lastname, String phone, String email, String group) { //конструктор при вызове которого не передается параметр id
-    this.id = 0;
+    this.id = Integer.MAX_VALUE;
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.phone = phone;
+    this.email = email;
+    this.group = group;
+  }
+
+  public ContactData(int id, String firstname, String lastname, String phone, String email, String group) { //конструктор при вызове которого передается параметр id
+    this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
     this.phone = phone;
@@ -21,15 +30,6 @@ public class ContactData {
 
   public int getId() {
     return id;
-  }
-
- public ContactData(int id, String firstname, String lastname, String phone, String email, String group) { //конструктор при вызове которого передается параметр id
-    this.id = id;
-    this.firstname = firstname;
-    this.lastname = lastname;
-    this.phone = phone;
-    this.email = email;
-    this.group = group;
   }
 
   public String getFirstname() {
