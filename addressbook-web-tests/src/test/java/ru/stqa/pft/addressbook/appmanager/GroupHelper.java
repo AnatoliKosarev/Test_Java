@@ -61,6 +61,14 @@ public class GroupHelper extends HelperBase {
     returntoGroupPage();
   }
 
+  public void modifyGroup(int index, GroupData group) {
+    selectGroup(index);
+    initGroupModification();
+    fillGroupForms(group);
+    submitGroupModification();
+    returntoGroupPage();
+  }
+
   public int getGroupCount() {
     return driver.findElements(By.name("selected[]")).size();
   }

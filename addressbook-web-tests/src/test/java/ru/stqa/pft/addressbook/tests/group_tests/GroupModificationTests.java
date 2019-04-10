@@ -1,6 +1,7 @@
 package ru.stqa.pft.addressbook.tests.group_tests;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.tests.TestBase;
@@ -10,27 +11,28 @@ import java.util.List;
 
 public class GroupModificationTests extends TestBase {
 
-  @Test
-  public void testGroupModification() {
+  @BeforeMethod
+  public void ensurePreconditions() {
     app.getNavigationHelper().gotoGroupPage();
 
     if (! app.getGroupHelper().isThereAGroup()) {
       app.getGroupHelper().createGroup(new GroupData("test1", null, null));
     }
+  }
+
+  @Test
+  public void testGroupModification() {
 
     List<GroupData> before = app.getGroupHelper().getGroupList();
-    app.getGroupHelper().selectGroup(before.size() - 1);
-    app.getGroupHelper().initGroupModification();
-    GroupData group = new GroupData(before.get(before.size() - 1).getId(), "test1", "test2", "test3"); //передаем id последней группы из списка before (до модификации) и др. параметры
-    app.getGroupHelper().fillGroupForms(group);
-    app.getGroupHelper().submitGroupModification();
-    app.getGroupHelper().returntoGroupPage();
+    int index = before.size() - 1;
+    GroupData group = new GroupData(before.get(index).getId(), "test1", "test2", "test3"); //передаем id группы с соответствующим индексом из списка before (до модификации) и др. параметры
+    app.getGroupHelper().modifyGroup(index, group);
     List<GroupData> after = app.getGroupHelper().getGroupList();
 
     Assert.assertEquals(after.size(), before.size());
 
-    before.remove(before.size() - 1); // убираем последнюю группу до модифкации
-    before.add(group); // добавляем последнюю группу после модификации
+    before.remove(index); // убираем группу с соответствующим индексом до модифкации
+    before.add(group); // добавляем группу с соответствующим индексом после модификации
     Comparator<? super GroupData> byId = Comparator.comparingInt(GroupData::getId); // сравниваем по идентификатору
     before.sort(byId); // сортировка по идентификатору
     after.sort(byId);
