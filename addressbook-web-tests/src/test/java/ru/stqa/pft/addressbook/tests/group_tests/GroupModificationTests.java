@@ -13,21 +13,21 @@ public class GroupModificationTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    app.getNavigationHelper().gotoGroupPage();
+    app.goTo().groupPage();
 
-    if (! app.getGroupHelper().isThereAGroup()) {
-      app.getGroupHelper().createGroup(new GroupData("test1", null, null));
+    if (app.group().list().size() == 0) { //если список групп пустой,то
+      app.group().create(new GroupData("test1", null, null));
     }
   }
 
   @Test
   public void testGroupModification() {
 
-    List<GroupData> before = app.getGroupHelper().getGroupList();
-    int index = before.size() - 1;
+    List<GroupData> before = app.group().list();
+    int index = before.size() - 1; // выбираем порядковый номер группы
     GroupData group = new GroupData(before.get(index).getId(), "test1", "test2", "test3"); //передаем id группы с соответствующим индексом из списка before (до модификации) и др. параметры
-    app.getGroupHelper().modifyGroup(index, group);
-    List<GroupData> after = app.getGroupHelper().getGroupList();
+    app.group().modify(index, group);
+    List<GroupData> after = app.group().list();
 
     Assert.assertEquals(after.size(), before.size());
 

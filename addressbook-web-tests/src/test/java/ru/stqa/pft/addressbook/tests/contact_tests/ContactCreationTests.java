@@ -13,13 +13,13 @@ public class ContactCreationTests extends TestBase {
 
   @Test
   public void testContactCreation() {
-    app.getNavigationHelper().gotoGroupPage();
+    app.goTo().groupPage();
 
-    if (! app.getGroupHelper().isThereAGroup()) {
-      app.getGroupHelper().createGroup(new GroupData("test1", null, null));
+    if (! app.group().isThereAGroup()) {
+      app.group().create(new GroupData("test1", null, null));
     }
 
-    app.getNavigationHelper().gotoHomePage();
+    app.goTo().gotoHomePage();
     List<ContactData> before = app.getContactHelper().getContactList();
     ContactData contact = new ContactData("test name 1", "test last name 1", "12345", "test_ignore@test.com", "test1");
     app.getContactHelper().createContact(contact, true);

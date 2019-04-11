@@ -54,14 +54,14 @@ public class GroupHelper extends HelperBase {
     return isElementPresent(By.name("selected[]"));
   }
 
-  public void createGroup(GroupData group) {
+  public void create(GroupData group) {
     initGroupCreation();
     fillGroupForms(group);
     submitGroupCreation();
     returntoGroupPage();
   }
 
-  public void modifyGroup(int index, GroupData group) {
+  public void modify(int index, GroupData group) {
     selectGroup(index);
     initGroupModification();
     fillGroupForms(group);
@@ -69,11 +69,17 @@ public class GroupHelper extends HelperBase {
     returntoGroupPage();
   }
 
+  public void delete(int index) {
+    selectGroup(index); //selecting группу с соответствующим индексом
+    deleteSelectedGroups();
+    returntoGroupPage();
+  }
+
   public int getGroupCount() {
     return driver.findElements(By.name("selected[]")).size();
   }
 
-  public List<GroupData> getGroupList() {
+  public List<GroupData> list() {
     List<GroupData> groups = new ArrayList<>();
     List<WebElement> elements = driver.findElements(By.cssSelector("span.group"));
     for (WebElement element : elements) {
