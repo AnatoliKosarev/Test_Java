@@ -15,7 +15,7 @@ public class GroupDeletionTests extends TestBase {
     app.goTo().groupPage();
 
     if (app.group().list().size() == 0) { //если список групп пустой,то
-      app.group().create(new GroupData("test1", null, null));
+      app.group().create(new GroupData().withName("test1"));
     }
   }
 

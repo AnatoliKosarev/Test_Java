@@ -16,7 +16,7 @@ public class GroupModificationTests extends TestBase {
     app.goTo().groupPage();
 
     if (app.group().list().size() == 0) { //если список групп пустой,то
-      app.group().create(new GroupData("test1", null, null));
+      app.group().create(new GroupData().withName("test1"));
     }
   }
 
@@ -25,7 +25,8 @@ public class GroupModificationTests extends TestBase {
 
     List<GroupData> before = app.group().list();
     int index = before.size() - 1; // выбираем порядковый номер группы
-    GroupData group = new GroupData(before.get(index).getId(), "test1", "test2", "test3"); //передаем id группы с соответствующим индексом из списка before (до модификации) и др. параметры
+    GroupData group = new GroupData().
+            withId(before.get(index).getId()).withName("test1").withHeader("test2").withFooter("test3"); //передаем id группы с соответствующим индексом из списка before (до модификации) и др. параметры
     app.group().modify(index, group);
     List<GroupData> after = app.group().list();
 
