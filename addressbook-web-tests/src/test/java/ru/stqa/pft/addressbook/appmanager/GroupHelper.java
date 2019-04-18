@@ -58,6 +58,7 @@ public class GroupHelper extends HelperBase {
     initGroupCreation();
     fillGroupForms(group);
     submitGroupCreation();
+    groupCache = null; //обнуляем кэш, т.к. список поменялся
     returntoGroupPage();
   }
 
@@ -66,12 +67,14 @@ public class GroupHelper extends HelperBase {
     initGroupModification();
     fillGroupForms(group);
     submitGroupModification();
+    groupCache = null; //обнуляем кэш, т.к. список поменялся
     returntoGroupPage();
   }
 
   public void deleteById(GroupData group) {
     selectGroupById(group.getId()); //передаем методу selectGroupById id из deletedGroup
     deleteSelectedGroups();
+    groupCache = null; //обнуляем кэш, т.к. список поменялся
     returntoGroupPage();
   }
 
@@ -79,17 +82,20 @@ public class GroupHelper extends HelperBase {
     return driver.findElements(By.name("selected[]")).size();
   }
 
+  private Groups groupCache = null;
 
-  public Groups all() { //создаем множества с группами
-    Groups groups = new Groups(); //создаем пустое множество типа Groups
+  public Groups all() { //создаем кэш множества с группами
+    if (groupCache != null) { // если кэш не пустой
+      return new Groups(groupCache); // возвращаем копию этого кэш множества
+    }
+    groupCache = new Groups(); //если кэш пустой заполняем его - создаем пустое множество типа Groups
     List<WebElement> elements = driver.findElements(By.cssSelector("span.group"));
-    for (WebElement element : elements) {
+    for (WebElement element : elements) { // переменная element пробегается по списку WebElement
       String name = element.getText();
       int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value"));
-      GroupData group = new GroupData().withId(id).withName(name);
-      groups.add(group);
+      groupCache.add(new GroupData().withId(id).withName(name)); // добавляем в кэш множество группы
     }
-    return groups;
+    return new Groups(groupCache); // возвращаем копию заполненного кэш множества
   }
 
 }
