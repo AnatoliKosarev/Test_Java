@@ -28,9 +28,8 @@ public class GroupModificationTests extends TestBase {
     GroupData group = new GroupData().
             withId(modifiedGroup.getId()).withName("test1").withHeader("test2").withFooter("test3"); //передаем id группы из объекта modifiedGroup из списка before (до модификации) и др. параметры
     app.group().modify(group);
+    assertThat(app.group().count(), equalTo(before.size())); //сравниваем кол-во элементов после добавления группы со старым списком
     Groups after = app.group().all(); //создаем множество типа Groups после модификации группы
-
-    assertThat(after.size(), equalTo(before.size()));
 
     assertThat(after, equalTo(before.withModified(modifiedGroup, group))); // сравниваем множества по именам и id,
                                                                            // 1. удалив модифицируемую группу из старого списка до модификации

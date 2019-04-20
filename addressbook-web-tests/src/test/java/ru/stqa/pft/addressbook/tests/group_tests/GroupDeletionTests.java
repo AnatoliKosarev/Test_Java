@@ -27,9 +27,8 @@ public class GroupDeletionTests extends TestBase {
     Groups before = app.group().all(); //создаем множество типа Groups до удаления группы
     GroupData deletedGroup = before.iterator().next(); //последовательно перебираем элементы, выбираем первый попавшийся элемент множества
     app.group().deleteById(deletedGroup);
+    assertThat(app.group().count(), equalTo(before.size() - 1)); //сравниваем кол-во элементов после добавления группы со старым списком - 1
     Groups after = app.group().all(); //создаем множество типа Groups после удаления группы
-
-    assertThat(after.size(), equalTo(before.size() - 1));
 
     assertThat(after, equalTo( before.without(deletedGroup))); // сравниваем множества по именам и id, удалив группу из старого списка
   }
