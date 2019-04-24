@@ -66,14 +66,28 @@ public class ContactHelper extends HelperBase {
     return isElementPresent(By.name("selected[]"));
   }
 
-  public void createContact(ContactData contact, boolean creation) {
+  public void create(ContactData contact, boolean creation) {
     initContactCreation();
     fillContactForm(contact, true);
     submitContactCreation();
     returntoHomePage();
   }
 
-  public List<ContactData> getContactList() {
+  public void modify(int index, ContactData contact) {
+    initContactModification(index); //выбираем последний контакт
+    fillContactForm(contact, false); //модифицируем контакт
+    submitContactModification();
+    returntoHomePage();
+  }
+
+  public void delete(int index) {
+    selectContact(index);
+    deleteContact();
+    acceptAlertDialog();
+    returntoHomePage();
+  }
+
+  public List<ContactData> list() {
     List<ContactData> contacts = new ArrayList<>(); //создаем основной список
     List<WebElement> elements = driver.findElements(By.name("entry")); //создаем вспомогательный список
     for (WebElement element : elements) { //element пробегает по вспомогательному списку

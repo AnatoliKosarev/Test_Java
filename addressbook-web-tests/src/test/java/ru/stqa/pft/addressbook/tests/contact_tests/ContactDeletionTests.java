@@ -1,6 +1,7 @@
 package ru.stqa.pft.addressbook.tests.contact_tests;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.GroupData;
@@ -10,26 +11,26 @@ import java.util.List;
 
 public class ContactDeletionTests extends TestBase {
 
-  @Test
-  public void testContactDeletion () {
+  @BeforeMethod
+  public void ensurePreconditions() {
     app.goTo().groupPage();
-
-    if (! app.group().isThereAGroup()) {
+    if (app.group().all().size() == 0) { //если множество групп пустое,то
       app.group().create(new GroupData().withName("test1"));
     }
 
-    app.goTo().gotoHomePage();
-
-    if (! app.getContactHelper().isThrereAContact()) {
-      app.getContactHelper().createContact(new ContactData("test name 1", "test last name 1", "12345", "test_ignore@test.com", "test1"), true);
+    app.goTo().HomePage();
+    if (app.contact().list().size() == 0) { //если множество контактов пустое,то
+      app.contact().create(new ContactData("test name 1", "test last name 1", "12345", "test_ignore@test.com", "test1"), true);
     }
+  }
 
-    List<ContactData> before = app.getContactHelper().getContactList();
-    app.getContactHelper().selectContact(before.size()-1);
-    app.getContactHelper().deleteContact();
-    app.getContactHelper().acceptAlertDialog();
-    app.getContactHelper().returntoHomePage();
-    List<ContactData> after = app.getContactHelper().getContactList();
+  @Test
+  public void testContactDeletion () {
+
+    List<ContactData> before = app.contact().list();
+    int index = before.size()-1;
+    app.contact().delete(index);
+    List<ContactData> after = app.contact().list();
 
     Assert.assertEquals(after.size(), before.size()-1);
 
