@@ -11,17 +11,18 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ContactModificationTests extends TestBase {
+  String groupName = "test1";
 
   @BeforeMethod
   public void ensurePreconditions() {
     app.goTo().groupPage();
     if (app.group().all().size() == 0) { //если множество групп пустое,то
-      app.group().create(new GroupData().withName("test1"));
+      app.group().create(new GroupData().withName(groupName));
     }
 
     app.goTo().HomePage();
     if (app.contact().list().size() == 0) { //если множество контактов пустое,то
-      app.contact().create(new ContactData("test name 1", "test last name 1", "12345", "test_ignore@test.com", "test1"), true);
+      app.contact().create(new ContactData().withFirstname("test name 1").withFirstname("test last name 1").withPhone("12345").withEmail("test_ignore@test.com").withGroupName(groupName), true);
     }
   }
 
@@ -30,7 +31,7 @@ public class ContactModificationTests extends TestBase {
 
     List<ContactData> before = app.contact().list(); //создаем перечень до модификации
     int index = before.size() - 1;
-    ContactData contact = new ContactData(before.get(index).getId(),"test name 5", "test last name 6", "678910", "test2_ignore@test.com", null); //создаем локальную переменную, передаем id последнего контакта из старого списка
+    ContactData contact = new ContactData().withId(before.get(index).getId()).withFirstname("test name 5").withLastname("test last name 6").withPhone("678910").withEmail("test2_ignore@test.com"); //создаем локальную переменную, передаем id последнего контакта из старого списка
     app.contact().modify(index, contact);
     List<ContactData> after = app.contact().list(); //создаем список после модификации
 

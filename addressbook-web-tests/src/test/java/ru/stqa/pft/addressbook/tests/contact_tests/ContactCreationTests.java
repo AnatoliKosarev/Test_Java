@@ -11,12 +11,13 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ContactCreationTests extends TestBase {
+  String groupName = "test1";
 
   @BeforeMethod
   public void ensurePreconditions() {
     app.goTo().groupPage();
     if (app.group().all().size() == 0) { //если множество групп пустое,то
-      app.group().create(new GroupData().withName("test1"));
+      app.group().create(new GroupData().withName(groupName));
     }
   }
 
@@ -25,7 +26,7 @@ public class ContactCreationTests extends TestBase {
 
     app.goTo().HomePage();
     List<ContactData> before = app.contact().list();
-    ContactData contact = new ContactData("test name 1", "test last name 1", "12345", "test_ignore@test.com", "test1");
+    ContactData contact = new ContactData().withFirstname("test name 1").withLastname("test last name 1").withPhone("12345").withEmail("test_ignore@test.com").withGroupName(groupName);
     app.contact().create(contact, true);
     List<ContactData> after = app.contact().list();
 

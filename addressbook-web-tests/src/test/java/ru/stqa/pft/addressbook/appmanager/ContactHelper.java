@@ -94,8 +94,8 @@ public class ContactHelper extends HelperBase {
       String firstname = element.findElement(By.xpath("td[3]")).getText(); //берем текст из 3 колонки соотв. строки
       String lastname = element.findElement(By.xpath("td[2]")).getText(); //берем текст из 2 колонки соотв. строки
       int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value")); //берем id из соотв. строки
-      ContactData contact = new ContactData(id, firstname, lastname, null, null, null); //создаем контакт, передаем ему полученные id, lastname, firstname
-      contacts.add(contact); //добавляем контакт в основной список
+      contacts.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname).withPhone(null).withEmail(null).withGroupName(null)); //создаем контакт, передаем ему полученные id, lastname, firstname
+                                                                                                                                                      //добавляем контакт в основной список
     }
     return contacts; //возвращаем основной список
   }

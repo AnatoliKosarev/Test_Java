@@ -10,17 +10,18 @@ import ru.stqa.pft.addressbook.tests.TestBase;
 import java.util.List;
 
 public class ContactDeletionTests extends TestBase {
+  String groupName = "test1";
 
   @BeforeMethod
   public void ensurePreconditions() {
     app.goTo().groupPage();
     if (app.group().all().size() == 0) { //если множество групп пустое,то
-      app.group().create(new GroupData().withName("test1"));
+      app.group().create(new GroupData().withName(groupName));
     }
 
     app.goTo().HomePage();
     if (app.contact().list().size() == 0) { //если множество контактов пустое,то
-      app.contact().create(new ContactData("test name 1", "test last name 1", "12345", "test_ignore@test.com", "test1"), true);
+      app.contact().create(new ContactData().withFirstname("test name 1").withLastname("test last name 1").withPhone("12345").withEmail("test_ignore@test.com").withGroupName(groupName), true);
     }
   }
 
