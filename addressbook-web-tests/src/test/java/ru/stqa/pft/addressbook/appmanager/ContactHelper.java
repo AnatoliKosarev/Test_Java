@@ -6,9 +6,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
-
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ContactHelper extends HelperBase {
   public ContactHelper(WebDriver driver) {
@@ -22,7 +22,8 @@ public class ContactHelper extends HelperBase {
   public void fillContactForm(ContactData contactData, boolean creation) {
     type(By.name("firstname"),contactData.getFirstname());
     type(By.name("lastname"),contactData.getLastname());
-    type(By.name("home"),contactData.getPhone());
+    type(By.name("address"),contactData.getAddress());
+    type(By.name("home"),contactData.getHome());
     type(By.name("email"),contactData.getEmail());
 
     if (creation) { //если creation = true проверяем, что на странице есть элемент "new group", выбираем его
@@ -36,14 +37,14 @@ public class ContactHelper extends HelperBase {
     click(By.name("submit"));
   }
 
-  public void initContactModification(int index) {
+  public void initContactModification() {
 
-    driver.findElements(By.cssSelector("img[alt='Edit']")).get(index).click(); //получаем порядковый индекс селектора, кликаем по нему
+    click(By.cssSelector("img[alt='Edit']"));
   }
 
-  public void selectContact(int index) {
+  public void selectContactById(int id) {
 
-    driver.findElements(By.name("selected[]")).get(index).click(); //получаем порядковый индекс селектора, кликаем по нему
+    driver.findElement(By.cssSelector("input[value = '"+ id +"']")).click(); //ищем элемент с тэгом input, у которого value = передаваемому id
   }
 
   public void deleteContact() {
@@ -73,28 +74,33 @@ public class ContactHelper extends HelperBase {
     returntoHomePage();
   }
 
-  public void modify(int index, ContactData contact) {
-    initContactModification(index); //выбираем последний контакт
+  public void modify(ContactData contact) {
+    selectContactById(contact.getId());//передаем методу selectContactById id из modifiedContact
+    initContactModification();
     fillContactForm(contact, false); //модифицируем контакт
     submitContactModification();
     returntoHomePage();
   }
 
-  public void delete(int index) {
-    selectContact(index);
+  public void delete(ContactData contact) {
+    selectContactById(contact.getId()); //передаем методу selectContactById id из deletedContact
     deleteContact();
     acceptAlertDialog();
     returntoHomePage();
   }
 
-  public List<ContactData> list() {
-    List<ContactData> contacts = new ArrayList<>(); //создаем основной список
+  public Set<ContactData> all() {
+    Set<ContactData> contacts = new HashSet<>(); //создаем основное множество
     List<WebElement> elements = driver.findElements(By.name("entry")); //создаем вспомогательный список
     for (WebElement element : elements) { //element пробегает по вспомогательному списку
       String firstname = element.findElement(By.xpath("td[3]")).getText(); //берем текст из 3 колонки соотв. строки
       String lastname = element.findElement(By.xpath("td[2]")).getText(); //берем текст из 2 колонки соотв. строки
+      String address = element.findElement(By.xpath("td[4]")).getText(); //берем текст из 4 колонки соотв. строки
+      String home = element.findElement(By.xpath("td[6]")).getText(); //берем текст из 6 колонки соотв. строки
+      String email = element.findElement(By.xpath("td[5]")).getText(); //берем текст из 5 колонки соотв. строки
       int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value")); //берем id из соотв. строки
-      contacts.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname).withPhone(null).withEmail(null).withGroupName(null)); //создаем контакт, передаем ему полученные id, lastname, firstname
+
+      contacts.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname).withAddress(address).withHome(home).withEmail(email)); //создаем контакт, передаем ему полученные id и др. параметры
                                                                                                                                                       //добавляем контакт в основной список
     }
     return contacts; //возвращаем основной список
