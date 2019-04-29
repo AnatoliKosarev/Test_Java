@@ -50,6 +50,30 @@ public class ContactData {
     return id;
   }
 
+  public String getFirstname() {
+    return firstname;
+  }
+
+  public String getLastname() {
+    return lastname;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public String getHome() {
+    return home;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getGroup() {
+    return group;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -80,29 +104,4 @@ public class ContactData {
             ", group='" + group + '\'' +
             '}';
   }
-
-  public String getFirstname() {
-    return firstname;
-  }
-
-  public String getLastname() {
-    return lastname;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public String getHome() {
-    return home;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getGroup() {
-    return group;
-  }
-
 }

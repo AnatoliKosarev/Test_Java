@@ -6,9 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
-import java.util.HashSet;
+import ru.stqa.pft.addressbook.model.Contacts;
 import java.util.List;
-import java.util.Set;
 
 public class ContactHelper extends HelperBase {
   public ContactHelper(WebDriver driver) {
@@ -37,9 +36,13 @@ public class ContactHelper extends HelperBase {
     click(By.name("submit"));
   }
 
-  public void initContactModification() {
+  public void initContactModification(int id) {
 
-    click(By.cssSelector("img[alt='Edit']"));
+    driver.findElement(By.cssSelector(String.format("a[href='edit.php?id=%s']", id))).click(); //получаем id modifiedContact, ищем элемент href таким id (вместо %s подставляется id)
+    //driver.findElement(By.xpath(String.format("//input[@value ='%s'] /../../              td[8]                  /a", id)))       .click();
+                                                 //1.находим чекбокс   2.вверх на 2 ур-ня   3. выбираем 8 ячейку   4.выбираем ссылку  5.кликаем по ссылке
+    //driver.findElement(By.xpath(String.format("//tr[.//input[@value ='%s']]              /td[8]                            /a", id)))         .click();
+                                                  //1.ищем строку, в которой есть такой id  2.находим в этой строке 8 ячейку 3.выбираем ссылку  4.кликаем по ссылке
   }
 
   public void selectContactById(int id) {
@@ -71,26 +74,37 @@ public class ContactHelper extends HelperBase {
     initContactCreation();
     fillContactForm(contact, true);
     submitContactCreation();
+    contactCache = null; //обнуляем кэш, т.к. множество поменялось
     returntoHomePage();
   }
 
   public void modify(ContactData contact) {
-    selectContactById(contact.getId());//передаем методу selectContactById id из modifiedContact
-    initContactModification();
+    initContactModification(contact.getId()); //передаем методу initContactModification id из modifiedContact, ищем соотв. элемент, кликаем по соотв. кнопке "Edit"
     fillContactForm(contact, false); //модифицируем контакт
     submitContactModification();
+    contactCache = null; //обнуляем кэш, т.к. множество поменялось
     returntoHomePage();
   }
 
   public void delete(ContactData contact) {
     selectContactById(contact.getId()); //передаем методу selectContactById id из deletedContact
     deleteContact();
+    contactCache = null; //обнуляем кэш, т.к. множество поменялось
     acceptAlertDialog();
     returntoHomePage();
   }
 
-  public Set<ContactData> all() {
-    Set<ContactData> contacts = new HashSet<>(); //создаем основное множество
+  public int count() {
+    return driver.findElements(By.name("selected[]")).size();
+  }
+
+  private Contacts contactCache = null;
+
+  public Contacts all() { //создаем кэш множества с группами
+    if (contactCache != null) { // если кэш не пустой
+      return new Contacts(contactCache); // возвращаем копию этого кэш множества
+    }
+    contactCache = new Contacts(); //если кэш пустой заполняем его - создаем пустое множество типа Contacts
     List<WebElement> elements = driver.findElements(By.name("entry")); //создаем вспомогательный список
     for (WebElement element : elements) { //element пробегает по вспомогательному списку
       String firstname = element.findElement(By.xpath("td[3]")).getText(); //берем текст из 3 колонки соотв. строки
@@ -100,9 +114,9 @@ public class ContactHelper extends HelperBase {
       String email = element.findElement(By.xpath("td[5]")).getText(); //берем текст из 5 колонки соотв. строки
       int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value")); //берем id из соотв. строки
 
-      contacts.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname).withAddress(address).withHome(home).withEmail(email)); //создаем контакт, передаем ему полученные id и др. параметры
-                                                                                                                                                      //добавляем контакт в основной список
+      contactCache.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname).withAddress(address).withHome(home).withEmail(email)); //создаем контакт, передаем ему полученные id и др. параметры
+                                                                                                                                                      //добавляем контакт в кэш множество
     }
-    return contacts; //возвращаем основной список
+    return new Contacts(contactCache); // возвращаем копию заполненного кэш множества
   }
 }

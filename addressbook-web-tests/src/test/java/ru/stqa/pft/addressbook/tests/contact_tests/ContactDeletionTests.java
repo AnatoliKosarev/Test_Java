@@ -1,12 +1,14 @@
 package ru.stqa.pft.addressbook.tests.contact_tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.tests.TestBase;
-import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactDeletionTests extends TestBase {
   String groupName = "test1";
@@ -27,15 +29,12 @@ public class ContactDeletionTests extends TestBase {
   @Test
   public void testContactDeletion () {
 
-    Set<ContactData> before = app.contact().all(); //создаем множество до удаления контакта
+    Contacts before = app.contact().all(); //создаем множество до удаления контакта
     ContactData deletedContact = before.iterator().next(); //последовательно перебираем элементы, выбираем первый попавшийся элемент множества
     app.contact().delete(deletedContact);
-    Set<ContactData> after = app.contact().all();
+    assertThat(app.contact().count(), equalTo(before.size()-1)); //hash предпроверка - сравниваем кол-во элементов после удаления контакта со старым списком-1
+    Contacts after = app.contact().all(); //если кол-во совпало - создаем множество после создания контакта
 
-    Assert.assertEquals(after.size(), before.size()-1); //сравниваем кол-во элементов после удаления группы со старым списком - 1
-
-    before.remove(deletedContact);
-
-    Assert.assertEquals(after, before); // сравниваем множества по id и др. параметрам указанным в ContactData, удалив контакт из старого множества
+    assertThat(after, equalTo(before.without(deletedContact))); // сравниваем множества по id и др. параметрам указанным в ContactData, удалив контакт из старого множества
   }
 }
