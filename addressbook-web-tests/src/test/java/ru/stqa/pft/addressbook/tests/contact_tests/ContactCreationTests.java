@@ -20,13 +20,13 @@ public class ContactCreationTests extends TestBase {
     }
   }
 
-  @Test ()
+  @Test
   public void testContactCreation() {
 
     app.goTo().HomePage();
     Contacts before = app.contact().all(); //создаем множество до создания контакта
     ContactData contact = new ContactData().withFirstname("test name 1").withLastname("test last name 1").
-            withAddress("City 1, Str. 2, Bl. 3, App. 4").withHome("12345").withEmail("test_ignore@test.com").withGroupName(groupName); //создаем локальную переменную, передаем id последнего контакта из старого списка и данные ввода
+            withAddress("City 1, Str. 2, Bl. 3, App. 4").withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withGroupName(groupName); //создаем локальную переменную, передаем id последнего контакта из старого списка и данные ввода
     app.contact().create(contact, true);
     assertThat(app.contact().count(), equalTo(before.size()+1)); //hash предпроверка - сравниваем кол-во элементов после добавления контакта со старым списком+1
     Contacts after = app.contact().all(); //если кол-во совпало - создаем множество после создания контакта

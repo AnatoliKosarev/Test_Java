@@ -21,7 +21,8 @@ public class ContactModificationTests extends TestBase {
 
     app.goTo().HomePage();
     if (app.contact().all().size() == 0) { //если множество контактов пустое,то
-      app.contact().create(new ContactData().withFirstname("test name 1").withLastname("test last name 1").withAddress("City 1, Str. 2, Bl. 3, App. 4").withHome("12345").withEmail("test_ignore@test.com").withGroupName(groupName), true);
+      app.contact().create(new ContactData().withFirstname("test name 1").withLastname("test last name 1").withAddress("City 1, Str. 2, Bl. 3, App. 4").
+              withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withGroupName(groupName), true);
     }
   }
 
@@ -31,7 +32,7 @@ public class ContactModificationTests extends TestBase {
     Contacts before = app.contact().all(); //создаем перечень до модификации
     ContactData modifiedContact = before.iterator().next(); //последовательно перебираем элементы, выбираем первый попавшийся элемент множества
     ContactData contact = new ContactData().withId(modifiedContact.getId()).withFirstname("test name 5").withLastname("test last name 6").
-            withAddress("City 9, Str. 8, Bl. 7, App. 6").withHome("678910").withEmail("test2_ignore@test.com"); //создаем локальную переменную, передаем id последнего контакта из старого списка и данные ввода
+            withAddress("City 9, Str. 8, Bl. 7, App. 6").withHomePhone("147").withMobilePhone("258").withWorkPhone("369").withEmail("test2_ignore@test.com"); //создаем локальную переменную, передаем id последнего контакта из старого списка и данные ввода
     app.contact().modify(contact);
     assertThat(app.contact().count(), equalTo(before.size())); //hash предпроверка - сравниваем кол-во элементов после модификации контакта со старым списком
     Contacts after = app.contact().all(); //если кол-во совпало - создаем множество после создания контакта

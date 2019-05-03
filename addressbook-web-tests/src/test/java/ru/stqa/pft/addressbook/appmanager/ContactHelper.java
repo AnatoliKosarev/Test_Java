@@ -22,7 +22,9 @@ public class ContactHelper extends HelperBase {
     type(By.name("firstname"),contactData.getFirstname());
     type(By.name("lastname"),contactData.getLastname());
     type(By.name("address"),contactData.getAddress());
-    type(By.name("home"),contactData.getHome());
+    type(By.name("home"),contactData.getHomePhone());
+    type(By.name("mobile"),contactData.getMobilePhone());
+    type(By.name("work"),contactData.getWorkPhone());
     type(By.name("email"),contactData.getEmail());
 
     if (creation) { //если creation = true проверяем, что на странице есть элемент "new group", выбираем его
@@ -105,18 +107,39 @@ public class ContactHelper extends HelperBase {
       return new Contacts(contactCache); // возвращаем копию этого кэш множества
     }
     contactCache = new Contacts(); //если кэш пустой заполняем его - создаем пустое множество типа Contacts
-    List<WebElement> elements = driver.findElements(By.name("entry")); //создаем вспомогательный список
-    for (WebElement element : elements) { //element пробегает по вспомогательному списку
-      String firstname = element.findElement(By.xpath("td[3]")).getText(); //берем текст из 3 колонки соотв. строки
-      String lastname = element.findElement(By.xpath("td[2]")).getText(); //берем текст из 2 колонки соотв. строки
-      String address = element.findElement(By.xpath("td[4]")).getText(); //берем текст из 4 колонки соотв. строки
-      String home = element.findElement(By.xpath("td[6]")).getText(); //берем текст из 6 колонки соотв. строки
-      String email = element.findElement(By.xpath("td[5]")).getText(); //берем текст из 5 колонки соотв. строки
-      int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value")); //берем id из соотв. строки
+    List<WebElement> rows = driver.findElements(By.name("entry")); //создаем вспомогательный список
+    for (WebElement row : rows) { //row пробегает по вспомогательному списку
+      //так
+      List <WebElement> cells = row.findElements(By.tagName("td"));
+      int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("value")); //берем id из соотв. строки, нумерация ячеек с 0, поэтому 1 ячейка = 0
+      String firstname = cells.get(2).getText(); //берем текст из соотв. колонки соотв. строки
+      String lastname = cells.get(1).getText(); //берем текст из соотв. колонки соотв. строки
+      String address = cells.get(3).getText(); //берем текст из соотв. колонки соотв. строки
+      String email = cells.get(4).getText(); //берем текст из соотв. колонки соотв. строки
 
-      contactCache.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname).withAddress(address).withHome(home).withEmail(email)); //создаем контакт, передаем ему полученные id и др. параметры
-                                                                                                                                                      //добавляем контакт в кэш множество
+      //или так
+      /*int id = Integer.parseInt(row.findElement(By.tagName("input")).getAttribute("value")); //берем id из соотв. строки
+      String firstname = row.findElement(By.xpath("td[2]")).getText(); //берем текст из 3 колонки соотв. строки
+      String lastname = row.findElement(By.xpath("td[1]")).getText(); //берем текст из 2 колонки соотв. строки
+      String ...*/
+
+      String allPhones = cells.get(5).getText(); //берем телефоны из соотв. колонки соотв. строки одной строкой
+
+      contactCache.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname).withAddress(address).
+              withAllPhones(allPhones).withEmail(email)); //создаем контакт, передаем ему полученные id и др. параметры, добавляем контакт в кэш множество
     }
     return new Contacts(contactCache); // возвращаем копию заполненного кэш множества
+  }
+
+  public ContactData infoFromEditForm(ContactData contact) {
+    initContactModification(contact.getId()); //передаем методу initContactModification id из выбранного контакта, ищем соотв. элемент, кликаем по соотв. кнопке "Edit"
+    String firstName = driver.findElement(By.name("firstname")).getAttribute("value"); //берем значение из соответствующего поля
+    String lastName = driver.findElement(By.name("lastname")).getAttribute("value"); //берем значение из соответствующего поля
+    String home = driver.findElement(By.name("home")).getAttribute("value"); //берем значение из соответствующего поля
+    String mobile = driver.findElement(By.name("mobile")).getAttribute("value"); //берем значение из соответствующего поля
+    String work = driver.findElement(By.name("work")).getAttribute("value"); //берем значение из соответствующего поля
+    driver.navigate().back(); // возвращаемся на Home page
+    return new ContactData().withId(contact.getId()).withFirstname(firstName).withLastname(lastName).
+            withHomePhone(home).withMobilePhone(mobile).withWorkPhone(work); //возвращаем объект, заполняем соотв. поля полученными значениями
   }
 }

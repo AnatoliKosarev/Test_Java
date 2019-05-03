@@ -22,7 +22,8 @@ public class ContactDeletionTests extends TestBase {
 
     app.goTo().HomePage();
     if (app.contact().all().size() == 0) { //если множество контактов пустое,то
-      app.contact().create(new ContactData().withFirstname("test name 1").withLastname("test last name 1").withAddress("City 1, Str. 2, Bl. 3, App. 4").withHome("12345").withEmail("test_ignore@test.com").withGroupName(groupName), true);
+      app.contact().create(new ContactData().withFirstname("test name 1").withLastname("test last name 1").withAddress("City 1, Str. 2, Bl. 3, App. 4").
+              withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withGroupName(groupName), true);
     }
   }
 
