@@ -13,6 +13,7 @@ public class ContactData {
   private String allPhones;
   private String email;
   private String group;
+  private String contactDetails;
 
   public ContactData withId(int id) {
     this.id = id;
@@ -64,6 +65,11 @@ public class ContactData {
     return this;
   }
 
+  public ContactData withContactDetails(String contactInfo) {
+    this.contactDetails = contactInfo;
+    return this;
+  }
+
   public int getId() {
     return id;
   }
@@ -104,6 +110,10 @@ public class ContactData {
     return group;
   }
 
+  public String getContactDetails() {
+    return contactDetails;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -113,12 +123,13 @@ public class ContactData {
             Objects.equals(firstname, that.firstname) &&
             Objects.equals(lastname, that.lastname) &&
             Objects.equals(address, that.address) &&
-            Objects.equals(email, that.email);
+            Objects.equals(email, that.email) &&
+            Objects.equals(contactDetails, that.contactDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, firstname, lastname, address, email);
+    return Objects.hash(id, firstname, lastname, address, email, contactDetails);
   }
 
   @Override

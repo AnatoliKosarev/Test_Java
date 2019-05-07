@@ -34,6 +34,16 @@ public class ContactHelper extends HelperBase {
     }
   }
 
+  public void fillContactFormWithoutGroup(ContactData contactData) { // спец. метод для заполнения контакта без выбора группы для сравнения с Details
+    type(By.name("firstname"),contactData.getFirstname());
+    type(By.name("lastname"),contactData.getLastname());
+    type(By.name("address"),contactData.getAddress());
+    type(By.name("home"),contactData.getHomePhone());
+    type(By.name("mobile"),contactData.getMobilePhone());
+    type(By.name("work"),contactData.getWorkPhone());
+    type(By.name("email"),contactData.getEmail());
+  }
+
   public void submitContactCreation() {
     click(By.name("submit"));
   }
@@ -45,6 +55,11 @@ public class ContactHelper extends HelperBase {
                                                  //1.находим чекбокс   2.вверх на 2 ур-ня   3. выбираем 8 ячейку   4.выбираем ссылку  5.кликаем по ссылке
     //driver.findElement(By.xpath(String.format("//tr[.//input[@value ='%s']]              /td[8]                            /a", id)))         .click();
                                                   //1.ищем строку, в которой есть такой id  2.находим в этой строке 8 ячейку 3.выбираем ссылку  4.кликаем по ссылке
+  }
+
+
+  private void initContactDetails(int id) {
+    driver.findElement(By.cssSelector(String.format("a[href='view.php?id=%s']", id))).click(); //получаем id contact, ищем элемент href таким id (вместо %s подставляется id)
   }
 
   public void selectContactById(int id) {
@@ -75,6 +90,14 @@ public class ContactHelper extends HelperBase {
   public void create(ContactData contact, boolean creation) {
     initContactCreation();
     fillContactForm(contact, true);
+    submitContactCreation();
+    contactCache = null; //обнуляем кэш, т.к. множество поменялось
+    returntoHomePage();
+  }
+
+  public void createWithoutGroup(ContactData contact) { // спец. метод создания контакта без выбора группы для сравнения с Details
+    initContactCreation();
+    fillContactFormWithoutGroup(contact);
     submitContactCreation();
     contactCache = null; //обнуляем кэш, т.к. множество поменялось
     returntoHomePage();
@@ -135,11 +158,20 @@ public class ContactHelper extends HelperBase {
     initContactModification(contact.getId()); //передаем методу initContactModification id из выбранного контакта, ищем соотв. элемент, кликаем по соотв. кнопке "Edit"
     String firstName = driver.findElement(By.name("firstname")).getAttribute("value"); //берем значение из соответствующего поля
     String lastName = driver.findElement(By.name("lastname")).getAttribute("value"); //берем значение из соответствующего поля
+    String address = driver.findElement(By.name("address")).getText(); //берем текст из соответствующего поля
     String home = driver.findElement(By.name("home")).getAttribute("value"); //берем значение из соответствующего поля
     String mobile = driver.findElement(By.name("mobile")).getAttribute("value"); //берем значение из соответствующего поля
     String work = driver.findElement(By.name("work")).getAttribute("value"); //берем значение из соответствующего поля
+    String email = driver.findElement(By.name("email")).getAttribute("value"); //берем значение из соответствующего поля
     driver.navigate().back(); // возвращаемся на Home page
-    return new ContactData().withId(contact.getId()).withFirstname(firstName).withLastname(lastName).
+    return new ContactData().withId(contact.getId()).withFirstname(firstName).withLastname(lastName).withAddress(address).withEmail(email).
             withHomePhone(home).withMobilePhone(mobile).withWorkPhone(work); //возвращаем объект, заполняем соотв. поля полученными значениями
+  }
+
+  public ContactData infoFromDetailsForm(ContactData contact) {
+    initContactDetails(contact.getId()); //передаем методу initContactDetails id из выбранного контакта, ищем соотв. элемент, кликаем по соотв. кнопке "Details"
+    String contactInfo = driver.findElement(By.id("content")).getText(); //берем текст со страницы Details
+    driver.navigate().back(); // возвращаемся на Home page
+    return new ContactData().withContactDetails(contactInfo); //возвращаем полученный текст
   }
 }

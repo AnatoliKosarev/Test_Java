@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ContactPhoneTests extends TestBase {
+public class ContactEditFormTests extends TestBase {
   String groupName = "test1";
 
   @BeforeMethod
@@ -31,7 +31,7 @@ public class ContactPhoneTests extends TestBase {
 
   @Test
 
-  public void testContactPhones () {
+  public void testContactPhones() {
 
     app.goTo().HomePage();
     ContactData contact = app.contact().all().iterator().next(); // создаем множество контактов, выбираем первый попавшийся
@@ -40,9 +40,31 @@ public class ContactPhoneTests extends TestBase {
     assertThat(contact.getAllPhones(), equalTo(mergePhones(contactInfoFromEditForm))); // сравниваем телефоны с Home page с телефонами с Edit формы, предварительно их склеив с помощью mergePhones
   }
 
+  @Test
+
+  public void testContactAddress() {
+
+    app.goTo().HomePage();
+    ContactData contact = app.contact().all().iterator().next(); // создаем множество контактов, выбираем первый попавшийся
+    ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(contact); // загружаем инфо выбранного контакта из формы редактирования
+
+    assertThat(contact.getAddress(), equalTo(contactInfoFromEditForm.getAddress())); // сравниваем адреса с Home page с адресами с Edit формы
+  }
+
+  @Test
+
+  public void testContactEmail() {
+
+    app.goTo().HomePage();
+    ContactData contact = app.contact().all().iterator().next(); // создаем множество контактов, выбираем первый попавшийся
+    ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(contact); // загружаем инфо выбранного контакта из формы редактирования
+
+    assertThat(contact.getEmail(), equalTo(contactInfoFromEditForm.getEmail())); // сравниваем email с Home page с email с Edit формы
+  }
+
   private String mergePhones(ContactData contact) {
     return  Arrays.asList(contact.getHomePhone(), contact.getMobilePhone(), contact.getWorkPhone()).stream().filter((s) -> !s.equals("")).
-            map(ContactPhoneTests::cleaned).collect(Collectors.joining("\n"));
+            map(ContactEditFormTests::cleaned).collect(Collectors.joining("\n"));
     //1. формируем коллекцию телефонов  2. переводим ее в поток.  3. фильтруем - оставляем только не пустые элементы.  4. применяем ф-цию cleaned с помощью map к отфильтрованным элементам потока
     // 5. склеиваем отфильтрованные элементы с помощью коллектора "joining", в кач-ве параметра ему передаем разделитель \n, это та строка, которая будет вставляться между склеиваемыми элементами
   }
