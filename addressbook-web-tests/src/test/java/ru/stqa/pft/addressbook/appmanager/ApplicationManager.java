@@ -33,7 +33,7 @@ public class ApplicationManager {
     }
 
     baseUrl = "https://www.katalon.com/";
-    driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+    driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
     driver.get("http://localhost/addressbook");
     sessionHelper = new SessionHelper(driver);
     navigationHelper = new NavigationHelper(driver);
