@@ -6,6 +6,9 @@ import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.tests.TestBase;
+
+import java.io.File;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -25,7 +28,8 @@ public class ContactCreationTests extends TestBase {
 
     app.goTo().HomePage();
     Contacts before = app.contact().all(); //создаем множество до создания контакта
-    ContactData contact = new ContactData().withFirstname("test name 1").withLastname("test last name 1").
+    File photo = new File("src/test/resources/stru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
+    ContactData contact = new ContactData().withFirstname("test name 1").withLastname("test last name 1").withPhoto(photo).
             withAddress("City 1, Str. 2, Bl. 3, App. 4").withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withGroupName(groupName); //создаем локальную переменную, передаем id последнего контакта из старого списка и данные ввода
     app.contact().create(contact, true);
     assertThat(app.contact().count(), equalTo(before.size()+1)); //hash предпроверка - сравниваем кол-во элементов после добавления контакта со старым списком+1
@@ -37,7 +41,7 @@ public class ContactCreationTests extends TestBase {
 
   }
 
-  @Test
+  @Test ()
   public void testBadContactCreation() { // негативный тест - контакт с апострофом в FirstName не должен создаваться, соотв. списки должны быть равны
 
     app.goTo().HomePage();
@@ -48,5 +52,4 @@ public class ContactCreationTests extends TestBase {
     Contacts after = app.contact().all(); //если кол-во не поменялось - тест идет дальше - создаем множество after
     assertThat(after, equalTo(before)); // проверка равенства множеств after и before по указанным в тесте параметрам и id
   }
-
 }
