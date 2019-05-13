@@ -6,6 +6,7 @@ import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
 import ru.stqa.pft.addressbook.tests.TestBase;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,11 +17,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class GroupCreationTests extends TestBase {
 
   @DataProvider
-  public Iterator<Object[]> validGroups() { // создаем провайдер тестовых данных validGroups
+  public Iterator<Object[]> validGroups() throws IOException { // создаем провайдер тестовых данных validGroups
     List<Object[]> list = new ArrayList<Object[]>(); // делаем список массива объектов
-    list.add(new Object[] {new GroupData().withName("test1").withHeader("header1").withFooter("footer1")}); // заполняем список массива объектов тест. данными, состоящим из одного объекта GroupData
-    list.add(new Object[] {new GroupData().withName("test2").withHeader("header2").withFooter("footer2")}); // заполняем список массива объектов тест. данными, состоящим из одного объекта GroupData
-    list.add(new Object[] {new GroupData().withName("test3").withHeader("header3").withFooter("footer3")}); // заполняем список массива объектов тест. данными, состоящим из одного объекта GroupData
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv"))); // создаем новый объект reader, передаем имя файла, который хотим прочитать
+    // BufferedReader - т.к. в нем есть метод readLine
+    String line = reader.readLine(); // читаем первую строку
+    while (line != null) { // цикл - пока строка в файле не пустая
+      String[] split = line.split(";"); // создаем массив, обрабатываем прочитанную строку - разбиваем на куски, кусок определяется по ; в конце, т.е. в кач-ве разделителя используем ";"
+      list.add(new Object[] {new GroupData().withName(split[0]).withHeader(split[1]).withFooter(split[2])}); // заполняем список массива объектов прочитанными тест. данными, состоящим из одного объекта GroupData
+      line = reader.readLine(); // читаем строку
+    }
     return list.iterator(); // возвращаем iterator (переборщик) для списка
   }
 
