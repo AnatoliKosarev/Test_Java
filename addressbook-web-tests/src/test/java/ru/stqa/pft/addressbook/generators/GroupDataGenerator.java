@@ -3,6 +3,7 @@ package ru.stqa.pft.addressbook.generators;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import com.thoughtworks.xstream.XStream;
 import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.io.File;
@@ -19,6 +20,9 @@ public class GroupDataGenerator {
 
   @Parameter (names = "-f", description = "Target file") // указываем какие опции передаем в командной строке, даем опциям имена и описание
   public String file; // file обозначили как String, т.к. jcommander не поддерживает работу с типом File
+
+  @Parameter (names = "-d", description = "Data format") // указываем какие опции передаем в командной строке, даем опциям имена и описание
+  public String format;
 
 
   public static void main (String args[]) throws IOException { //пробрасываем exception, поскольку дальше некуда - если исключение - прога ляжет, но будет информативное сообщение
@@ -41,7 +45,13 @@ public class GroupDataGenerator {
 
   private void run() throws IOException { //пробрасываем exception
     List<GroupData> groups = generateGroups(count); // генерируем группы
-    save(groups, new File(file)); //создаем и сохраняем файл с группами по указанному адресу, переводим file из String в File
+    if (format.equals("csv")) { // если указываем в edit config csv
+      saveAsCSV(groups, new File(file)); //создаем и сохраняем файл в формате csv с группами по указанному адресу, переводим file из String в File
+    } else if (format.equals("xml")) { // если указываем в edit config xml
+      saveAsXML(groups, new File(file)); //создаем и сохраняем файл в формате xml с группами по указанному адресу, переводим file из String в File
+    } else { // если какой-то другой формат
+      System.out.println("Unrecognized format" + format);
+    }
   }
 
   private List<GroupData> generateGroups(int count) { //генерируем группы в соответствии с указанным кол-вом
@@ -53,12 +63,22 @@ public class GroupDataGenerator {
     return groups; // возвращаем список
   }
 
-  private void save(List<GroupData> groups, File file) throws IOException { // пробрасываем exception в main метод
+  private void saveAsCSV(List<GroupData> groups, File file) throws IOException { // пробрасываем exception в main метод
     Writer writer = new FileWriter(file); //открываем файл на запись, в кач-ве параметра передаем путь
     for (GroupData group: groups) { //проходимся в цикле по всем группам переменной group
       writer.write(String.format("%s; %s; %s\n", group.getName(), group.getHeader(), group.getFooter())); // записываем каждую группу в файл,
       // Вместо %s подставляется name/header/footer, затем перенос на новую строку
     }
+    writer.close(); // закрываем writer для сохранения данных на диск из кэша
+  }
+
+  private void saveAsXML(List<GroupData> groups, File file) throws IOException {
+    XStream xstream = new XStream(); // создаем новый объект XStream
+    xstream.processAnnotations(GroupData.class); // для обработки аннотаций в классе GroupData для форматирования файла XML
+    String xml = xstream.toXML(groups); // сериализуем, т.е. переводим из объектного представления в строку в формате XML
+    // в кач-ве параметра передаем тот объект, который надо сериализовать
+    Writer writer = new FileWriter(file); //открываем файл на запись, в кач-ве параметра передаем путь
+    writer.write(xml); // записываем группы в файл в формате XML
     writer.close(); // закрываем writer для сохранения данных на диск из кэша
   }
 }

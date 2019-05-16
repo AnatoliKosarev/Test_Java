@@ -1,15 +1,19 @@
 package ru.stqa.pft.addressbook.tests.group_tests;
 
+import com.thoughtworks.xstream.XStream;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
 import ru.stqa.pft.addressbook.tests.TestBase;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,16 +22,21 @@ public class GroupCreationTests extends TestBase {
 
   @DataProvider
   public Iterator<Object[]> validGroups() throws IOException { // создаем провайдер тестовых данных validGroups
-    List<Object[]> list = new ArrayList<Object[]>(); // делаем список массива объектов
-    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv"))); // создаем новый объект reader, передаем имя файла, который хотим прочитать
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.xml"))); // создаем новый объект reader, передаем имя файла, который хотим прочитать
     // BufferedReader - т.к. в нем есть метод readLine
+    String xml = ""; // создаем пустую переменную xml, которую дальше заполняем прочитанными тестовыми данными
     String line = reader.readLine(); // читаем первую строку
-    while (line != null) { // цикл - пока строка в файле не пустая
-      String[] split = line.split(";"); // создаем массив, обрабатываем прочитанную строку - разбиваем на куски, кусок определяется по ; в конце, т.е. в кач-ве разделителя используем ";"
-      list.add(new Object[] {new GroupData().withName(split[0]).withHeader(split[1]).withFooter(split[2])}); // заполняем список массива объектов прочитанными тест. данными, состоящим из одного объекта GroupData
-      line = reader.readLine(); // читаем строку
+    while (line != null) { // читаем строки, пока они не пустые и добавляем их в переменную xml
+      xml += line; //т.е. xml = xml + line
+      line = reader.readLine(); // читаем следующую строку
     }
-    return list.iterator(); // возвращаем iterator (переборщик) для списка
+    XStream xstream = new XStream(); // создаем новый объект xstream
+    xstream.processAnnotations(GroupData.class); // обработка аннотаций в GroupData class
+    List<GroupData> groups = (List<GroupData>)xstream.fromXML(xml); // читаем данные типа List<GroupData>  и сохраняем в переменную groups того же типа
+    // явно преобразовываем тип (List<GroupData>), т.к. в данном случае знаем, что это список групп
+    return groups.stream().map((g) -> new Object[] {g}).collect(Collectors.toList()).iterator(); // к каждому объекту применяем ф-цию, которая этот объект
+    // заворачивает в массив, состоящий из одного этого объекта; далее после применения ф-ции ко всем объектам, с помощью collect из потока делаем опять
+    // List, берем у получившегося списка итератор (переборщик) и возвращаем его
   }
 
   @Test (dataProvider = "validGroups") // привязываем провайдер тестовых данных validGroups к тесту
