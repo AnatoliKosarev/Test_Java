@@ -3,6 +3,8 @@ package ru.stqa.pft.addressbook.generators;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thoughtworks.xstream.XStream;
 import ru.stqa.pft.addressbook.model.GroupData;
 
@@ -49,6 +51,8 @@ public class GroupDataGenerator {
       saveAsCSV(groups, new File(file)); //создаем и сохраняем файл в формате csv с группами по указанному адресу, переводим file из String в File
     } else if (format.equals("xml")) { // если указываем в edit config xml
       saveAsXML(groups, new File(file)); //создаем и сохраняем файл в формате xml с группами по указанному адресу, переводим file из String в File
+    } else if (format.equals("json")) { // если указываем в edit config xml
+      saveAsJson(groups, new File(file)); //создаем и сохраняем файл в формате json с группами по указанному адресу, переводим file из String в File
     } else { // если какой-то другой формат
       System.out.println("Unrecognized format" + format);
     }
@@ -64,12 +68,22 @@ public class GroupDataGenerator {
   }
 
   private void saveAsCSV(List<GroupData> groups, File file) throws IOException { // пробрасываем exception в main метод
-    Writer writer = new FileWriter(file); //открываем файл на запись, в кач-ве параметра передаем путь
-    for (GroupData group: groups) { //проходимся в цикле по всем группам переменной group
-      writer.write(String.format("%s; %s; %s\n", group.getName(), group.getHeader(), group.getFooter())); // записываем каждую группу в файл,
-      // Вместо %s подставляется name/header/footer, затем перенос на новую строку
+    try (Writer writer = new FileWriter(file)) { //открываем файл на запись, в кач-ве параметра передаем путь, используем try для автоматического закрытия и сохранения
+      for (GroupData group : groups) { //проходимся в цикле по всем группам переменной group
+        writer.write(String.format("%s; %s; %s\n", group.getName(), group.getHeader(), group.getFooter())); // записываем каждую группу в файл,
+        // Вместо %s подставляется name/header/footer, затем перенос на новую строку
+      }
     }
-    writer.close(); // закрываем writer для сохранения данных на диск из кэша
+  }
+
+  private void saveAsJson(List<GroupData> groups, File file) throws IOException {
+    Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create(); // создаем новый объект Gson, форматируем для красивого отображения
+    // и не сериализуем те поля, которые не помечены аннотацией @Expose
+    String json = gson.toJson(groups); // сериализуем, т.е. переводим из объектного представления в строку в формате json
+    // в кач-ве параметра передаем тот объект, который надо сериализовать
+    try (Writer writer = new FileWriter(file)) { //открываем файл на запись, в кач-ве параметра передаем путь, используем try для автоматического закрытия и сохранения
+      writer.write(json); // записываем группы в файл в формате json
+    }
   }
 
   private void saveAsXML(List<GroupData> groups, File file) throws IOException {
@@ -77,8 +91,8 @@ public class GroupDataGenerator {
     xstream.processAnnotations(GroupData.class); // для обработки аннотаций в классе GroupData для форматирования файла XML
     String xml = xstream.toXML(groups); // сериализуем, т.е. переводим из объектного представления в строку в формате XML
     // в кач-ве параметра передаем тот объект, который надо сериализовать
-    Writer writer = new FileWriter(file); //открываем файл на запись, в кач-ве параметра передаем путь
-    writer.write(xml); // записываем группы в файл в формате XML
-    writer.close(); // закрываем writer для сохранения данных на диск из кэша
+    try (Writer writer = new FileWriter(file)) {//открываем файл на запись, в кач-ве параметра передаем путь, используем try для автоматического закрытия и сохранения
+      writer.write(xml); // записываем группы в файл в формате XML
+    }
   }
 }

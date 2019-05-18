@@ -1,7 +1,9 @@
 package ru.stqa.pft.addressbook.model;
 
+import com.google.gson.annotations.Expose;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import net.bytebuddy.build.ToStringPlugin;
 
 import java.util.Objects;
 
@@ -11,8 +13,11 @@ public class GroupData {
 
   @XStreamOmitField // для генератора, чтобы в файле не было id, т.к. они все одинаковые (max value)
   private int id = Integer.MAX_VALUE;
+  @Expose //для сериализации в генераторе json
   private String name;
+  @Expose //для сериализации в генераторе json
   private String header;
+  @Expose //для сериализации в генераторе json
   private String footer;
 
   public String getName() {
