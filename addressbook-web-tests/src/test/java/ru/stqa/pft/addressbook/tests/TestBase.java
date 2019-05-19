@@ -1,5 +1,6 @@
 package ru.stqa.pft.addressbook.tests;
 
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.BrowserType;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -9,7 +10,8 @@ import static org.testng.Assert.fail;
 
 public class TestBase {
 
-  protected static final ApplicationManager app = new ApplicationManager(BrowserType.CHROME);
+  protected static final ApplicationManager app = new ApplicationManager(System.getProperty("browser", BrowserType.CHROME)); // если браузер указан в editConfigs используется он (-Dbrowser=firefox),
+  // если нет - второй дефолтный параметр CHROME
 
   @BeforeSuite(alwaysRun = true)
   public void setUp() throws Exception {

@@ -23,4 +23,7 @@ task testContacts (type: Test) {
     useTestNG() {
         suites 'src/test/resources/testng-contacts.xml'
     }
+    if (project.hasProperty('browser')) { // если в терминале указан браузер - используется он (gradle -Pbrowser=firefox testContacts), если нет - дефолтный из TestBase
+        systemProperty 'browser', "${browser}"
+    }
 }
