@@ -17,6 +17,12 @@ task testGroups (type: Test) {
     useTestNG() {
         suites 'src/test/resources/testng-groups.xml'
     }
+    if (project.hasProperty('browser')) { // если в терминале указан браузер - используется он (gradle -Pbrowser=firefox testContacts), если нет - дефолтный из TestBase
+        systemProperty 'browser', "${browser}"
+    }
+    if (project.hasProperty('target')) { // если в терминале указано св-во target - используется конф. файл указанный после него, если нет - дефолтный из App.Manager
+        systemProperty 'target', "${target}"
+    }
 }
 
 task testContacts (type: Test) {
@@ -25,5 +31,8 @@ task testContacts (type: Test) {
     }
     if (project.hasProperty('browser')) { // если в терминале указан браузер - используется он (gradle -Pbrowser=firefox testContacts), если нет - дефолтный из TestBase
         systemProperty 'browser', "${browser}"
+    }
+    if (project.hasProperty('target')) { // если в терминале указано св-во target - используется конф. файл указанный после него, если нет - дефолтный из App.Manager
+        systemProperty 'target', "${target}"
     }
 }
