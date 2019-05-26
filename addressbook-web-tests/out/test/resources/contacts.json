@@ -1,0 +1,32 @@
+[
+  {
+    "firstname": "test name 0",
+    "lastname": "test last name 0",
+    "address": "City 0, Str. 0, Bl. 0, App. 0",
+    "homePhone": "1230",
+    "mobilePhone": "4560",
+    "workPhone": "7890",
+    "email": "test_ignore0@test.com",
+    "group": "test1"
+  },
+  {
+    "firstname": "test name 1",
+    "lastname": "test last name 1",
+    "address": "City 1, Str. 1, Bl. 1, App. 1",
+    "homePhone": "1231",
+    "mobilePhone": "4561",
+    "workPhone": "7891",
+    "email": "test_ignore1@test.com",
+    "group": "test1"
+  },
+  {
+    "firstname": "test name 2",
+    "lastname": "test last name 2",
+    "address": "City 2, Str. 2, Bl. 2, App. 2",
+    "homePhone": "1232",
+    "mobilePhone": "4562",
+    "workPhone": "7892",
+    "email": "test_ignore2@test.com",
+    "group": "test1"
+  }
+]

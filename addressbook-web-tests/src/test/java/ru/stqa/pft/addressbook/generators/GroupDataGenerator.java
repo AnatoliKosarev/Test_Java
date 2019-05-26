@@ -78,7 +78,7 @@ public class GroupDataGenerator {
 
   private void saveAsJson(List<GroupData> groups, File file) throws IOException {
     Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create(); // создаем новый объект Gson, форматируем для красивого отображения
-    // и не сериализуем те поля, которые не помечены аннотацией @Expose
+    // и не сериализуем те поля, которые не помечены аннотацией @Expose в GroupData
     String json = gson.toJson(groups); // сериализуем, т.е. переводим из объектного представления в строку в формате json
     // в кач-ве параметра передаем тот объект, который надо сериализовать
     try (Writer writer = new FileWriter(file)) { //открываем файл на запись, в кач-ве параметра передаем путь, используем try для автоматического закрытия и сохранения
