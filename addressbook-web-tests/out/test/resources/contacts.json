@@ -6,8 +6,7 @@
     "homePhone": "1230",
     "mobilePhone": "4560",
     "workPhone": "7890",
-    "email": "test_ignore0@test.com",
-    "group": "test1"
+    "email": "test_ignore0@test.com"
   },
   {
     "firstname": "test name 1",
@@ -16,8 +15,7 @@
     "homePhone": "1231",
     "mobilePhone": "4561",
     "workPhone": "7891",
-    "email": "test_ignore1@test.com",
-    "group": "test1"
+    "email": "test_ignore1@test.com"
   },
   {
     "firstname": "test name 2",
@@ -26,7 +24,6 @@
     "homePhone": "1232",
     "mobilePhone": "4562",
     "workPhone": "7892",
-    "email": "test_ignore2@test.com",
-    "group": "test1"
+    "email": "test_ignore2@test.com"
   }
 ]

@@ -43,7 +43,7 @@ public class GroupCreationTests extends TestBase {
   }
 
   @DataProvider
-  public Iterator<Object[]> validGroupsFromJson() throws IOException { // создаем провайдер тестовых данных validGroupsFromXml
+  public Iterator<Object[]> validGroupsFromJson() throws IOException { // создаем провайдер тестовых данных validGroupsFromJson
     try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.json")))) { // создаем новый объект reader, передаем имя файла,
       // который хотим прочитать, используем try для автоматического закрытия и сохранения; используем BufferedReader - т.к. в нем есть метод readLine
       String json = ""; // создаем пустую переменную json, которую дальше заполняем прочитанными тестовыми данными
@@ -53,8 +53,8 @@ public class GroupCreationTests extends TestBase {
         line = reader.readLine(); // читаем следующую строку
       }
       Gson gson = new Gson(); // создаем новый объект Gson
-      List<GroupData> groups = gson.fromJson(json, new TypeToken<List<GroupData>>() {
-      }.getType()); // читаем данные типа List<GroupData>  и сохраняем в переменную groups того же типа
+      List<GroupData> groups = gson.fromJson(json, new TypeToken<List<GroupData>>() {}.getType());
+      // читаем данные типа List<GroupData>  и сохраняем в переменную groups того же типа
       // т.к. это сложный объект-список с дженериками (с указанием на то, какого типа данные хранятся в списке) - нельзя просто указать класс, поэтому используем конструкцию с TypeToken
       return groups.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator(); // к каждому объекту применяем ф-цию, которая этот объект
       // заворачивает в массив, состоящий из одного этого объекта; далее после применения ф-ции ко всем объектам, с помощью collect из потока делаем опять
@@ -62,7 +62,7 @@ public class GroupCreationTests extends TestBase {
     }
   }
 
-  @Test (dataProvider = "validGroupsFromJson") // привязываем провайдер тестовых данных validGroupsFromXml к тесту
+  @Test (dataProvider = "validGroupsFromJson") // привязываем провайдер тестовых данных validGroupsFromJson к тесту
   public void testGroupCreation(GroupData group) throws Exception { // добавляем в тестовый метод параметр GroupData, соотв. передаваемому типу параметров из провайдера тестовых данных
 
       app.goTo().groupPage();

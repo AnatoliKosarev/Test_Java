@@ -14,9 +14,9 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactDataGenerator {
+public class ModifiedContactDataGenerator {
 
-  @Parameter (names = "-c", description = "Contact count") // указываем какие опции передаем в командной строке, даем опциям имена и описание
+  @Parameter(names = "-c", description = "Contact count") // указываем какие опции передаем в командной строке, даем опциям имена и описание
   public int count;
 
   @Parameter (names = "-f", description = "Target file") // указываем какие опции передаем в командной строке, даем опциям имена и описание
@@ -24,7 +24,7 @@ public class ContactDataGenerator {
 
   public static void main(String args[]) throws IOException { //пробрасываем exception, поскольку дальше некуда - если исключение - прога ляжет, но будет информативное сообщение
 
-    ContactDataGenerator generator = new ContactDataGenerator(); //создаем объект класса ContactDataGenerator
+    ModifiedContactDataGenerator generator = new ModifiedContactDataGenerator(); //создаем объект класса ContactDataGenerator
 
     JCommander jCommander = new JCommander(generator); // создаем новый объект JCommander и помещаем его в локальную переменную;
 
@@ -46,9 +46,10 @@ public class ContactDataGenerator {
   private List<ContactData> generateContacts(int count) { //генерируем контакты в соответствии с указанным кол-вом
     List<ContactData> contacts = new ArrayList<>(); // создаем пустой список contacts
     for (int i = 0; i < count; i++) { // в цикле создаем контакты, добавляем в список contacts (1-инициализация, 2-условие окончания, т.е выполнение пока true, 3-после каждой итерации)
-      contacts.add(new ContactData().withFirstname(String.format("test name %s", i)).withLastname(String.format("test last name %s", i)).
-              withAddress(String.format("City %s, Str. %s, Bl. %s, App. %s", i,i,i,i)).withHomePhone(String.format("123%s", i)).withMobilePhone(String.format("456%s", i)).
-              withWorkPhone(String.format("789%s", i)).withEmail(String.format("test_ignore%s@test.com", i)));
+      contacts.add(new ContactData().withFirstname(String.format("modified test name %s", i)).withLastname(String.format("modified test last name %s", i)).
+              withAddress(String.format("modified City %s, Str. %s, Bl. %s, App. %s", i,i,i,i)).withHomePhone(String.format("modified 123%s", i)).
+              withMobilePhone(String.format("modified 456%s", i)).withWorkPhone(String.format("modified 789%s", i)).
+              withEmail(String.format("modified test_ignore%s@test.com", i)));
     }
     return contacts; // возвращаем список
   }
