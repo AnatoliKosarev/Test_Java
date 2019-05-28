@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class GroupModificationTests extends TestBase {
 
   @DataProvider
-  public Iterator<Object[]> validModifiedGroupsFromJson() throws IOException { // создаем провайдер тестовых данных validGroupsFromXml
+  public Iterator<Object[]> validModifiedGroupsFromJson() throws IOException { // создаем провайдер тестовых данных validModifiedGroupsFromJson
     try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/modified-groups.json")))) { // создаем новый объект reader, передаем имя файла,
       // который хотим прочитать, используем try для автоматического закрытия и сохранения; используем BufferedReader - т.к. в нем есть метод readLine
       String json = ""; // создаем пустую переменную json, которую дальше заполняем прочитанными тестовыми данными
@@ -56,7 +56,7 @@ public class GroupModificationTests extends TestBase {
 
     Groups before = app.group().all(); //создаем множество типа Groups до модификации группы
     GroupData modifiedGroup = before.iterator().next(); //последовательно перебираем элементы, выбираем первый попавшийся элемент множества
-    app.group().modify(group.withId(modifiedGroup.getId())); // передаем методу create параметр из провайдера тестовых данных
+    app.group().modify(group.withId(modifiedGroup.getId())); // передаем методу modify параметр из провайдера тестовых данных
     // и id группы из объекта modifiedGroup из списка before (до модификации)
     assertThat(app.group().count(), equalTo(before.size())); //сравниваем кол-во элементов со старым множеством
     Groups after = app.group().all(); //создаем множество типа Groups после модификации группы

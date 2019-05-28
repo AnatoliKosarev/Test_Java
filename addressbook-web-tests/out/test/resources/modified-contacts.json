@@ -1,0 +1,11 @@
+[
+  {
+    "firstname": "modified test name 0",
+    "lastname": "modified test last name 0",
+    "address": "modified City 0, Str. 0, Bl. 0, App. 0",
+    "homePhone": "modified 1230",
+    "mobilePhone": "modified 4560",
+    "workPhone": "modified 7890",
+    "email": "modified test_ignore0@test.com"
+  }
+]
