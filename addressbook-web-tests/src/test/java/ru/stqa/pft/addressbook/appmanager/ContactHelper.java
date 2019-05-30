@@ -175,4 +175,9 @@ public class ContactHelper extends HelperBase {
     driver.navigate().back(); // возвращаемся на Home page
     return new ContactData().withContactDetails(contactInfo); //возвращаем полученный текст
   }
+
+  public ContactData getGroupName () { //берем любое существующее имя группы из существующего списка
+    String groupName = driver.findElement(By.className("group")).getText();
+    return new ContactData().withGroupName(groupName);
+  }
 }

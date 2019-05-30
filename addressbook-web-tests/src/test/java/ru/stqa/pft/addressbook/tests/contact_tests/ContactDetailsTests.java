@@ -45,13 +45,11 @@ public class ContactDetailsTests extends TestBase {
     }
   }
 
-  String groupName = "test1";
-
   @BeforeMethod
   public void ensurePreconditions() {
     app.goTo().groupPage();
     if (app.group().all().size() == 0) { //если множество групп пустое,то
-      app.group().create(new GroupData().withName(groupName));
+      app.group().create(new GroupData().withName("test1"));
     }
   }
 

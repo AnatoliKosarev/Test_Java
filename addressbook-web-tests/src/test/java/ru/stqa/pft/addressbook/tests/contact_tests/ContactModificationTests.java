@@ -43,17 +43,17 @@ public class ContactModificationTests extends TestBase {
     }
   }
 
-  String groupName = "test1";
-
   @BeforeMethod
   public void ensurePreconditions() {
     app.goTo().groupPage();
     if (app.group().all().size() == 0) { //если множество групп пустое,то
-      app.group().create(new GroupData().withName(groupName));
+      app.group().create(new GroupData().withName("test1"));
     }
 
     app.goTo().HomePage();
     if (app.contact().all().size() == 0) { //если множество контактов пустое,то
+      app.goTo().groupPage();
+      String groupName = app.contact().getGroupName().getGroup();
       app.contact().create(new ContactData().withFirstname("test name 1").withLastname("test last name 1").withAddress("City 1, Str. 2, Bl. 3, App. 4").
               withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withGroupName(groupName), true);
     }
