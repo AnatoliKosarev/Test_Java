@@ -16,7 +16,7 @@ public class DbConnectionTest {
 
       Statement st = conn.createStatement(); // создаем объект типа Statement
       ResultSet rs = st.executeQuery("select group_id, group_name, group_header, group_footer from group_list"); // вызываем у объекта st метод выборки, делаем выборку из БД
-      // результат выборки укладываем в переменной rs
+      // результат выборки укладываем в переменной rs (тип похожий на коллекцию, но для него нельзя использовать for)
 
       Groups groups = new Groups(); // создаем пустой множество
 

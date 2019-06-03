@@ -3,21 +3,38 @@ package ru.stqa.pft.addressbook.model;
 import com.google.gson.annotations.Expose;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import net.bytebuddy.build.ToStringPlugin;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @XStreamAlias("group") // для генератора, чтобы в файле тэг для GroupData вместо длинного названия пакета был просто group
 
+@Entity // для привязки к БД для Hibernate
+@Table(name = "group_list") // для привязки к таблице БД для Hibernate
+
 public class GroupData {
 
   @XStreamOmitField // для генератора, чтобы в файле не было id, т.к. они все одинаковые (max value)
+  @Id // для привязки к таблице БД для Hibernate - т.к. id используется как идентификатор, поэтому ему присваивается особая аннотация
+  @Column(name = "group_id") // для привязки к столбцу в таблице БД для Hibernate
   private int id = Integer.MAX_VALUE;
+
   @Expose //для сериализации в генераторе json
+  @Column(name = "group_name") // для привязки к таблице БД для Hibernate
   private String name;
+
   @Expose //для сериализации в генераторе json
+  @Column(name = "group_header") // для привязки к таблице БД для Hibernate
+  @Type(type = "text") // описание типа для преобразования для Hibernate
   private String header;
+
   @Expose //для сериализации в генераторе json
+  @Column(name = "group_footer") // для привязки к таблице БД для Hibernate
+  @Type(type = "text") // описание типа для преобразования для Hibernate
   private String footer;
 
   public String getName() {

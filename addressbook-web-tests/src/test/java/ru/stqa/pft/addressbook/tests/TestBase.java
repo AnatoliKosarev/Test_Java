@@ -35,14 +35,14 @@ public class TestBase {
     }
   }
 
-  @BeforeMethod() //запускается для логирования перед каждым тестовым методом
+  @BeforeMethod(alwaysRun = true) //запускается для логирования перед каждым тестовым методом
   public void logTestStart(Method m, Object[] p) { // в кач-ве параметров передаем имя тестового метода + параметры, если тест параметризованный
-    logger.info("Start test " + m.getName() + "with Parameters " + Arrays.asList(p)); // выводим сообщение в консоль + сохраняем в файл
+    logger.info("Start test " + m.getName() + " with Parameters " + Arrays.asList(p)); // выводим сообщение в консоль + сохраняем в файл
   }
 
   @AfterMethod(alwaysRun = true) //запускается для логирования после каждого тестового метода
   public void logTestStop(Method m, Object[] p) { // в кач-ве параметров передаем имя тестового метода + параметры, если тест параметризованный
-    logger.info(("Stop test " + m.getName() + "with Parameters " + Arrays.asList(p))); // выводим сообщение в консоль + сохраняем в файл
+    logger.info(("Stop test " + m.getName() + " with Parameters " + Arrays.asList(p))); // выводим сообщение в консоль + сохраняем в файл
   }
 
 }

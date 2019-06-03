@@ -63,10 +63,8 @@ public class ContactCreationTests extends TestBase {
     app.goTo().HomePage();
     Contacts before = app.contact().all(); //создаем множество до создания контакта
     File photo = new File("src/test/resources/stru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
-    /*ContactData contact = new ContactData().withFirstname("test name 1").withLastname("test last name 1").withPhoto(photo).
-            withAddress("City 1, Str. 2, Bl. 3, App. 4").withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withGroupName(groupName); //создаем локальную переменную, передаем id последнего контакта из старого списка и данные ввода
-    */
-    app.contact().create(contact.withGroupName(groupName).withPhoto(photo), true);
+    app.contact().create(contact.withGroupName(groupName).withPhoto(photo), true); // передаем методу create параметр из провайдера тестовых данных, имя сущ. группы и фото
+
     assertThat(app.contact().count(), equalTo(before.size()+1)); //hash предпроверка - сравниваем кол-во элементов после добавления контакта со старым списком+1
     Contacts after = app.contact().all(); //если кол-во совпало - создаем множество после создания контакта
 
