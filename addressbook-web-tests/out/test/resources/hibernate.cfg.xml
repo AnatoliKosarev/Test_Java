@@ -14,28 +14,30 @@
     <session-factory>
 
         <!-- Database connection settings -->
-        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/addressbook</property>
-        <property name="connection.username">root</property>
-        <property name="connection.password"></property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property> <!--указываем название драйвера-->
+        <property name="connection.url">jdbc:mysql://localhost:3306/addressbook</property> <!--указываем адрес БД-->
+        <property name="connection.username">root</property> <!--указываем имя пользователя-->
+        <property name="connection.password"></property> <!--указываем пароль-->
 
         <!-- JDBC connection pool (use the built-in) -->
         <property name="connection.pool_size">1</property>
 
         <!-- SQL dialect -->
-        <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property> <!--указываем диалект-->
 
         <!-- Disable the second-level cache  -->
         <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
 
         <!-- Echo all executed SQL to stdout -->
-        <property name="show_sql">true</property>
+        <property name="show_sql">true</property> <!--указываем true, чтобы видеть, какие запросы делает hibernate-->
 
         <!-- Drop and re-create the database schema on startup -->
-        <property name="hbm2ddl.auto">validate</property>
+        <property name="hbm2ddl.auto">validate</property> <!--указываем validate - если будут неправильные привязки hibernate предупредит,
+        но сам создвавть таблицы не будет, как было бы если бы указали create-->
 
         <!-- Names the annotated entity class -->
-        <mapping class="ru.stqa.pft.addressbook.model.GroupData"/>
+        <mapping class="ru.stqa.pft.addressbook.model.GroupData"/> <!--указываем привязки к каким классам будем делать-->
+        <mapping class="ru.stqa.pft.addressbook.model.ContactData"/> <!--указываем привязки к каким классам будем делать-->
 
     </session-factory>
 

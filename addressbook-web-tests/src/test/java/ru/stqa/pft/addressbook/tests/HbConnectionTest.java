@@ -7,6 +7,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.List;
@@ -36,9 +37,10 @@ public class HbConnectionTest {
   public void testHbConnection() {
     Session session = sessionFactory.openSession(); // создаем локальную переменную seesion, в которой проводим инициализацию, начинаем сессию
     session.beginTransaction();
-    List<GroupData> result = session.createQuery( "from GroupData" ).list(); // создаем список типа GroupData в который записываем данные по результатам выборки
-    for ( GroupData group : result ) { // пробегаемся по списку переменной group
-      System.out.println(group); // выводим прочитанные данные на консоль
+    List<ContactData> result = session.createQuery( "from ContactData where deprecated = '0000-00-00'" ).list(); // создаем список типа ContactData в который записываем данные по результатам выборки
+    // выборку делаем только для не удаленных контактов - т.к. в БД отображаются удаленные с датой в Deprecated столбце - мы выводим deprecated с нулями, т.е. те которые не удалены
+    for ( ContactData contact : result ) { // пробегаемся по списку переменной group
+      System.out.println(contact); // выводим прочитанные данные на консоль
     }
     session.getTransaction().commit();
     session.close(); // закрытие сессии

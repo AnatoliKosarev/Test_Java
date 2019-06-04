@@ -1,30 +1,66 @@
 package ru.stqa.pft.addressbook.model;
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.io.File;
 import java.util.Objects;
 
+@Entity // для привязки к БД для Hibernate
+@Table (name = "addressbook") // для привязки к таблице БД для Hibernate
+
 public class ContactData {
+
+  @Id // для привязки к таблице БД для Hibernate - т.к. id используется как идентификатор, поэтому ему присваивается особая аннотация
+  @Column (name = "id") // для привязки к столбцу в таблице БД для Hibernate
   private int id = Integer.MAX_VALUE;
+
   @Expose
+  @Column (name = "firstname") // для привязки к столбцу в таблице БД для Hibernate
   private String firstname;
+
   @Expose
+  @Column (name = "lastname") // для привязки к столбцу в таблице БД для Hibernate
   private String lastname;
+
   @Expose
+  @Column (name = "address") // для привязки к столбцу в таблице БД для Hibernate
+  @Type(type = "text") // описание типа для преобразования для Hibernate
   private String address;
+
   @Expose
+  @Column (name = "home") // для привязки к столбцу в таблице БД для Hibernate
+  @Type(type = "text") // описание типа для преобразования для Hibernate
   private String homePhone;
+
   @Expose
+  @Column (name = "mobile") // для привязки к столбцу в таблице БД для Hibernate
+  @Type(type = "text") // описание типа для преобразования для Hibernate
   private String mobilePhone;
+
   @Expose
+  @Column (name = "work") // для привязки к столбцу в таблице БД для Hibernate
+  @Type(type = "text") // описание типа для преобразования для Hibernate
   private String workPhone;
+
+  @Transient // для полей которые надо пропустить при выборке из БД для Hibernate
   private String allPhones;
+
   @Expose
+  @Column (name = "email") // для привязки к столбцу в таблице БД для Hibernate
+  @Type(type = "text") // описание типа для преобразования для Hibernate
   private String email;
+
+  @Transient // для полей которые надо пропустить при выборке из БД для Hibernate
   private String group;
+
+  @Transient // для полей которые надо пропустить при выборке из БД для Hibernate
   private String contactDetails;
-  private File photo;
+
+  @Column (name = "photo") // для привязки к столбцу в таблице БД для Hibernate
+  @Type(type = "text") // описание типа для преобразования для Hibernate
+  private String photo; // т.к. в таблице БД хранится в виде строки
 
   public ContactData withId(int id) {
     this.id = id;
@@ -82,7 +118,7 @@ public class ContactData {
   }
 
   public ContactData withPhoto(File photo) {
-    this.photo = photo;
+    this.photo = photo.getPath(); // т.к. не файл а строка
     return this;
   }
 
@@ -131,7 +167,7 @@ public class ContactData {
   }
 
   public File getPhoto() {
-    return photo;
+    return new File(photo); // преобразуем в файл
   }
 
   @Override
