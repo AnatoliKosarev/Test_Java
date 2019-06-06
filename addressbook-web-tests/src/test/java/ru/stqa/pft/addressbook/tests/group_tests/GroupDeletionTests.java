@@ -14,9 +14,9 @@ public class GroupDeletionTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    app.goTo().groupPage();
 
-    if (app.group().all().size() == 0) { //если множество групп пустое,то
+    if (app.db().groups().size() == 0) { //если множество групп пустое,то
+      app.goTo().groupPage();
       app.group().create(new GroupData().withName("test1"));
     }
   }
@@ -24,11 +24,12 @@ public class GroupDeletionTests extends TestBase {
   @Test
   public void testGroupDeletion() throws Exception {
 
-    Groups before = app.group().all(); //создаем множество типа Groups до удаления группы
+    Groups before = app.db().groups(); //создаем множество типа Groups до удаления группы из БД
     GroupData deletedGroup = before.iterator().next(); //последовательно перебираем элементы, выбираем первый попавшийся элемент множества
+    app.goTo().groupPage();
     app.group().deleteById(deletedGroup);
     assertThat(app.group().count(), equalTo(before.size() - 1)); //сравниваем кол-во элементов после удаления группы со старым списком - 1
-    Groups after = app.group().all(); //создаем множество типа Groups после удаления группы
+    Groups after = app.db().groups(); //создаем множество типа Groups после удаления группы из БД
 
     assertThat(after, equalTo( before.without(deletedGroup))); // сравниваем множества по именам и id, удалив группу из старого списка
   }

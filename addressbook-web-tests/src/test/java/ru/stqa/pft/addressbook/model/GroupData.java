@@ -27,6 +27,22 @@ public class GroupData {
   @Column(name = "group_name") // для привязки к таблице БД для Hibernate
   private String name;
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    GroupData groupData = (GroupData) o;
+    return id == groupData.id &&
+            Objects.equals(name, groupData.name) &&
+            Objects.equals(header, groupData.header) &&
+            Objects.equals(footer, groupData.footer);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, header, footer);
+  }
+
   @Expose //для сериализации в генераторе json
   @Column(name = "group_header") // для привязки к таблице БД для Hibernate
   @Type(type = "text") // описание типа для преобразования для Hibernate
@@ -66,20 +82,6 @@ public class GroupData {
   public GroupData withHeader(String header) { //сеттер, возвращает тот объект в котором вызывался, после модификации
     this.header = header;
     return this;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    GroupData groupData = (GroupData) o;
-    return id == groupData.id &&
-            Objects.equals(name, groupData.name);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name);
   }
 
   public GroupData withFooter(String footer) { //сеттер, возвращает тот объект в котором вызывался, после модификации

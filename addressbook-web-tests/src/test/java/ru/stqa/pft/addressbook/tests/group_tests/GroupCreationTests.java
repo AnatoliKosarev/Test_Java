@@ -65,11 +65,11 @@ public class GroupCreationTests extends TestBase {
   @Test (dataProvider = "validGroupsFromJson") // привязываем провайдер тестовых данных validGroupsFromJson к тесту
   public void testGroupCreation(GroupData group) throws Exception { // добавляем в тестовый метод параметр GroupData, соотв. передаваемому типу параметров из провайдера тестовых данных
 
+      Groups before = app.db().groups(); //создаем множество типа Groups до создания группы из БД
       app.goTo().groupPage();
-      Groups before = app.group().all(); //создаем множество типа Groups до создания группы
       app.group().create(group); // передаем методу create параметр из провайдера тестовых данных
       assertThat(app.group().count(), equalTo(before.size() + 1)); //сравниваем кол-во элементов после добавления группы со старым списком+1
-      Groups after = app.group().all(); //создаем множество типа Groups после создания группы
+      Groups after = app.db().groups(); //создаем множество типа Groups после создания группы из БД
 
       assertThat(after, equalTo(before.withAdded(group.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt())))); //сравниваем множества по именам и id,
       // 1. добавив в старый список группу с макс. id и указанным именем;
@@ -79,11 +79,11 @@ public class GroupCreationTests extends TestBase {
   @Test
   public void testBadGroupCreation() throws Exception { // негативный тест - группа с апострофом в имени не должна создаваться, соотв. списки должны быть равны
     app.goTo().groupPage();
-    Groups before = app.group().all();
+    Groups before = app.db().groups();
     GroupData group = new GroupData().withName("test8'"); // не валидный символ '
     app.group().create(group);
     assertThat(app.group().count(), equalTo(before.size()));
-    Groups after = app.group().all();
+    Groups after = app.db().groups();
 
     assertThat(after, equalTo(before));
 

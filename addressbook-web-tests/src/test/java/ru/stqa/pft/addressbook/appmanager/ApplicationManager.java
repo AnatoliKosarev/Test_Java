@@ -21,6 +21,7 @@ public class ApplicationManager {
   private ContactHelper contactHelper;
   public StringBuffer verificationErrors = new StringBuffer();
   private String browser;
+  private DbHelper dbHelper;
 
   public ApplicationManager(String browser) {
     this.browser = browser;
@@ -33,6 +34,7 @@ public class ApplicationManager {
     properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties", target)))); // загружаем и читаем конф. файл, вместо %s подставляется указанное target
 
 
+    dbHelper = new DbHelper(); // параметров сюда не передаем, т.к. всю инфо будет брать из конфигю файла hibernate.cfg.xml
     if (browser.equals(BrowserType.CHROME)) {
       driver = new ChromeDriver();
     } else if (browser.equals(BrowserType.FIREFOX)) {
@@ -41,13 +43,17 @@ public class ApplicationManager {
       driver = new InternetExplorerDriver();
     }
 
-    driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+    driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
     driver.get(properties.getProperty("web.baseUrl")); // вместо конкретного адреса используется значение св-ва, которое загружается из внешнего файла
     sessionHelper = new SessionHelper(driver);
     navigationHelper = new NavigationHelper(driver);
     groupHelper = new GroupHelper(driver);
     contactHelper = new ContactHelper(driver);
     sessionHelper.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword")); // вместо конкретного login+pass используется значение из внешнего файла
+  }
+
+  public DbHelper db() {
+    return dbHelper;
   }
 
   public void stop() {

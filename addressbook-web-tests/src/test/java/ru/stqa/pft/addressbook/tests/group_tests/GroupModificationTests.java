@@ -44,9 +44,9 @@ public class GroupModificationTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    app.goTo().groupPage();
 
-    if (app.group().all().size() == 0) { //если множество групп пустое,то
+    if (app.db().groups().size() == 0) { //если множество групп пустое,то
+      app.goTo().groupPage();
       app.group().create(new GroupData().withName("test1"));
     }
   }
@@ -54,12 +54,13 @@ public class GroupModificationTests extends TestBase {
   @Test (dataProvider = "validModifiedGroupsFromJson")  // привязываем провайдер тестовых данных validModifiedGroupsFromJson к тесту
   public void testGroupModification(GroupData group) {
 
-    Groups before = app.group().all(); //создаем множество типа Groups до модификации группы
+    Groups before = app.db().groups(); //создаем множество типа Groups до модификации группы из БД
     GroupData modifiedGroup = before.iterator().next(); //последовательно перебираем элементы, выбираем первый попавшийся элемент множества
+    app.goTo().groupPage();
     app.group().modify(group.withId(modifiedGroup.getId())); // передаем методу modify параметр из провайдера тестовых данных
     // и id группы из объекта modifiedGroup из списка before (до модификации)
     assertThat(app.group().count(), equalTo(before.size())); //сравниваем кол-во элементов со старым множеством
-    Groups after = app.group().all(); //создаем множество типа Groups после модификации группы
+    Groups after = app.db().groups(); //создаем множество типа Groups после модификации группы из БД
 
     assertThat(after, equalTo(before.withModified(modifiedGroup, group))); // сравниваем множества по именам и id,
                                                                            // 1. удалив модифицируемую группу из старого списка до модификации
