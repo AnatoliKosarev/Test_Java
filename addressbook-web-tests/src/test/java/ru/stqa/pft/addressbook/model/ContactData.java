@@ -166,8 +166,26 @@ public class ContactData {
     return contactDetails;
   }
 
-  public File getPhoto() {
-    return new File(photo); // преобразуем в файл
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ContactData that = (ContactData) o;
+    return id == that.id &&
+            Objects.equals(firstname, that.firstname) &&
+            Objects.equals(lastname, that.lastname) &&
+            Objects.equals(address, that.address) &&
+            Objects.equals(homePhone, that.homePhone) &&
+            Objects.equals(mobilePhone, that.mobilePhone) &&
+            Objects.equals(workPhone, that.workPhone) &&
+            Objects.equals(allPhones, that.allPhones) &&
+            Objects.equals(email, that.email) &&
+            Objects.equals(contactDetails, that.contactDetails);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, firstname, lastname, address, homePhone, mobilePhone, workPhone, allPhones, email, contactDetails);
   }
 
   @Override
@@ -183,7 +201,12 @@ public class ContactData {
             ", allPhones='" + allPhones + '\'' +
             ", email='" + email + '\'' +
             ", group='" + group + '\'' +
+            ", contactDetails='" + contactDetails + '\'' +
             '}';
+  }
+
+  public File getPhoto() {
+    return new File(photo); // преобразуем в файл
   }
 
 }

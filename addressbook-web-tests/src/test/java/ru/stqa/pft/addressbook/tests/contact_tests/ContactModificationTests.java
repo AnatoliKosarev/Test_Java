@@ -45,16 +45,16 @@ public class ContactModificationTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    app.goTo().groupPage();
-    if (app.group().all().size() == 0) { //если множество групп пустое,то
+    if (app.db().groups().size() == 0) { //если множество групп пустое,то
+      app.goTo().groupPage();
       app.group().create(new GroupData().withName("test1"));
     }
 
-    app.goTo().HomePage();
-    if (app.contact().all().size() == 0) { //если множество контактов пустое,то
+    if (app.db().contacts().size() == 0) { //если множество контактов пустое,то
       app.goTo().groupPage();
       String groupName = app.contact().getGroupName().getGroup();
       File photo = new File("src/test/resources/stru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
+      app.goTo().HomePage();
       app.contact().create(new ContactData().withFirstname("test name 1").withLastname("test last name 1").withAddress("City 1, Str. 2, Bl. 3, App. 4").
               withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withPhoto(photo).withGroupName(groupName), true);
     }
@@ -63,13 +63,16 @@ public class ContactModificationTests extends TestBase {
   @Test (dataProvider = "validModifiedContactsFromJson")
   public void testContactModification(ContactData contact) {
 
-    Contacts before = app.contact().all(); //создаем перечень до модификации
+    Contacts before = app.db().contacts(); //создаем перечень до модификации из БД
     ContactData modifiedContact = before.iterator().next(); //последовательно перебираем элементы, выбираем первый попавшийся элемент множества
     File photo = new File("src/test/resources/modstru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
+    app.goTo().HomePage();
     app.contact().modify(contact.withId(modifiedContact.getId()).withPhoto(photo)); // передаем методу modify параметр из провайдера тестовых данных
     // и id группы из объекта modifiedContact из списка before (до модификации), modified photo
+    Contacts dbPhoto = app.db().contacts();
+
     assertThat(app.contact().count(), equalTo(before.size())); //hash предпроверка - сравниваем кол-во элементов после модификации контакта со старым списком
-    Contacts after = app.contact().all(); //если кол-во совпало - создаем множество после создания контакта
+    Contacts after = app.db().contacts(); //если кол-во совпало - создаем множество после создания контакта
 
     assertThat(after, equalTo(before.withModified(modifiedContact, contact))); //сравниваем множества по id и др. параметрам указанным в ContactData
     // 1. из старого множества удаляем последний контакт до модификации

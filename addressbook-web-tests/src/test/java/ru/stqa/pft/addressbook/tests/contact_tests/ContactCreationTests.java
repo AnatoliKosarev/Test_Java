@@ -49,8 +49,8 @@ public class ContactCreationTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    app.goTo().groupPage();
-    if (app.group().all().size() == 0) { //если множество групп пустое,то
+    if (app.db().contacts().size() == 0) { //если множество групп пустое,то
+      app.goTo().groupPage();
       app.group().create(new GroupData().withName("test1"));
     }
   }
@@ -61,12 +61,12 @@ public class ContactCreationTests extends TestBase {
     app.goTo().groupPage();
     String groupName = app.contact().getGroupName().getGroup();
     app.goTo().HomePage();
-    Contacts before = app.contact().all(); //создаем множество до создания контакта
+    Contacts before = app.db().contacts(); //создаем множество до создания контакта
     File photo = new File("src/test/resources/stru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
     app.contact().create(contact.withGroupName(groupName).withPhoto(photo), true); // передаем методу create параметр из провайдера тестовых данных, имя сущ. группы и фото
 
     assertThat(app.contact().count(), equalTo(before.size()+1)); //hash предпроверка - сравниваем кол-во элементов после добавления контакта со старым списком+1
-    Contacts after = app.contact().all(); //если кол-во совпало - создаем множество после создания контакта
+    Contacts after = app.db().contacts(); //если кол-во совпало - создаем множество после создания контакта
 
     assertThat(after, equalTo(before.withAdded(contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt())))); // сравниваем множества по id и др. параметрам указанным в ContactData, добавив контакт в старое множество
                                                                                                                               // 1. добавив в старый список контакт с макс. id и указанными параметрами;
@@ -80,12 +80,13 @@ public class ContactCreationTests extends TestBase {
     app.goTo().groupPage();
     String groupName = app.contact().getGroupName().getGroup();
     app.goTo().HomePage();
-    Contacts before = app.contact().all(); //создаем множество до создания контакта
+    Contacts before = app.db().contacts(); //создаем множество до создания контакта
+    File photo = new File("src/test/resources/stru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
     app.contact().initContactCreation();
-    ContactData contact = new ContactData().withFirstname("test name 1'").withGroupName(groupName); // не валидный символ '
+    ContactData contact = new ContactData().withFirstname("test name 1'").withGroupName(groupName).withPhoto(photo); // не валидный символ '
     app.contact().create(contact, true);
     assertThat(app.contact().count(), equalTo(before.size())); //hash предпроверка на то что кол-во контактов не поменялось (до создания множества after для ускорения, т.к. count быстрее создания множества, соотв. если кол-во поменялось - тест упадет быстрее)
-    Contacts after = app.contact().all(); //если кол-во не поменялось - тест идет дальше - создаем множество after
+    Contacts after = app.db().contacts(); //если кол-во не поменялось - тест идет дальше - создаем множество after
     assertThat(after, equalTo(before)); // проверка равенства множеств after и before по указанным в тесте параметрам и id
   }
 }
