@@ -47,8 +47,8 @@ public class ContactDetailsTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    app.goTo().groupPage();
-    if (app.group().all().size() == 0) { //если множество групп пустое,то
+    if (app.db().contacts().size() == 0) { //если множество групп пустое,то
+      app.goTo().groupPage();
       app.group().create(new GroupData().withName("test1"));
     }
   }
@@ -57,7 +57,7 @@ public class ContactDetailsTests extends TestBase {
   public void testContactInfo(ContactData contact) {
     app.goTo().HomePage();
     app.contact().createWithoutGroup(contact); // создаем контакт без выбора группы с помощью параметра из провайдера тестовых данных
-    Contacts after = app.contact().all(); // создаем множество контактов после создания
+    Contacts after = app.db().contacts(); // создаем множество контактов после создания
     ContactData createdContact = contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()); // создаем переменную createdContact в которой содержится последний созданный контакт (с max id)
     ContactData contactInfoFromDetailsForm = app.contact().infoFromDetailsForm(createdContact); // загружаем инфо последнего созданного контакта со страницы Details в переменную contactInfoFromDetailsForm
     ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(createdContact); // загружаем инфо последнего созданного контакта со страницы Edit в переменную contactInfoFromEditForm
