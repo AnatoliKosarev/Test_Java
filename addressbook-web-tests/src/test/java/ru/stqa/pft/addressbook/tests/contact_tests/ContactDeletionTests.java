@@ -16,7 +16,7 @@ public class ContactDeletionTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    if (app.db().contacts().size() == 0) { //если множество групп пустое,то
+    if (app.db().groups().size() == 0) { //если множество групп пустое,то
       app.goTo().groupPage();
       app.group().create(new GroupData().withName("test1"));
     }
@@ -41,5 +41,7 @@ public class ContactDeletionTests extends TestBase {
     Contacts after = app.db().contacts(); //если кол-во совпало - создаем множество после создания контакта
 
     assertThat(after, equalTo(before.without(deletedContact))); // сравниваем множества по id и др. параметрам указанным в ContactData, удалив контакт из старого множества
+
+    verifyContactListInUI(); // осуществляется проверка отображения списка контактов в UI и сравнение с БД если в VM options уазано -DverifyUI=true
   }
 }

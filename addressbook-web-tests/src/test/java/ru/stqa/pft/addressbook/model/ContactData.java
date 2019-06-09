@@ -202,6 +202,7 @@ public class ContactData {
             ", email='" + email + '\'' +
             ", group='" + group + '\'' +
             ", contactDetails='" + contactDetails + '\'' +
+            ", photo='" + photo + '\'' +
             '}';
   }
 

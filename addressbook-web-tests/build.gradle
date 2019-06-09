@@ -26,6 +26,9 @@ task testGroups (type: Test) {
     if (project.hasProperty('target')) { // если в терминале указано св-во target - используется конф. файл указанный после него, если нет - дефолтный из App.Manager
         systemProperty 'target', "${target}"
     }
+    if (project.hasProperty('verifyUI')) { // если в терминале указано св-во verifyUI=true - осуществляется проверка отображения списка групп в UI и сравнение с БД
+        systemProperty 'verifyUI', "${verifyUI}"
+    }
 }
 
 task testContacts (type: Test) {
@@ -37,5 +40,8 @@ task testContacts (type: Test) {
     }
     if (project.hasProperty('target')) { // если в терминале указано св-во target - используется конф. файл указанный после него, если нет - дефолтный из App.Manager
         systemProperty 'target', "${target}"
+    }
+    if (project.hasProperty('verifyUI')) { // если в терминале указано св-во verifyUI=true - осуществляется проверка отображения списка контактов в UI и сравнение с БД
+        systemProperty 'verifyUI', "${verifyUI}"
     }
 }

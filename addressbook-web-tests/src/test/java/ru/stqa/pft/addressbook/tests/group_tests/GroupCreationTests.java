@@ -74,6 +74,8 @@ public class GroupCreationTests extends TestBase {
       assertThat(after, equalTo(before.withAdded(group.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt())))); //сравниваем множества по именам и id,
       // 1. добавив в старый список группу с макс. id и указанным именем;
       // 2. находим max id - преобразуем after в поток, с помощью mapToInt преобразуем id элементы потока в числа (т.е. в кач-ве параметра принимает группу (g), а вкач-ве результата выдает id этой группы), находим max, передаем его в group
+
+    verifyGroupListInUI(); // осуществляется проверка отображения списка групп в UI и сравнение с БД если в VM options уазано -DverifyUI=true
   }
 
   @Test
@@ -86,6 +88,8 @@ public class GroupCreationTests extends TestBase {
     Groups after = app.db().groups();
 
     assertThat(after, equalTo(before));
+
+    verifyGroupListInUI(); // осуществляется проверка отображения списка групп в UI и сравнение с БД если в VM options уазано -DverifyUI=true
 
   }
 

@@ -32,6 +32,8 @@ public class GroupDeletionTests extends TestBase {
     Groups after = app.db().groups(); //создаем множество типа Groups после удаления группы из БД
 
     assertThat(after, equalTo( before.without(deletedGroup))); // сравниваем множества по именам и id, удалив группу из старого списка
+
+    verifyGroupListInUI(); // осуществляется проверка отображения списка групп в UI и сравнение с БД если в VM options уазано -DverifyUI=true
   }
 
 }

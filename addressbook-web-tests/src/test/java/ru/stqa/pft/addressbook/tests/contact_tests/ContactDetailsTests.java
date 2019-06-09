@@ -47,7 +47,7 @@ public class ContactDetailsTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    if (app.db().contacts().size() == 0) { //если множество групп пустое,то
+    if (app.db().groups().size() == 0) { //если множество групп пустое,то
       app.goTo().groupPage();
       app.group().create(new GroupData().withName("test1"));
     }

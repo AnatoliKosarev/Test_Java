@@ -69,7 +69,6 @@ public class ContactModificationTests extends TestBase {
     app.goTo().HomePage();
     app.contact().modify(contact.withId(modifiedContact.getId()).withPhoto(photo)); // передаем методу modify параметр из провайдера тестовых данных
     // и id группы из объекта modifiedContact из списка before (до модификации), modified photo
-    Contacts dbPhoto = app.db().contacts();
 
     assertThat(app.contact().count(), equalTo(before.size())); //hash предпроверка - сравниваем кол-во элементов после модификации контакта со старым списком
     Contacts after = app.db().contacts(); //если кол-во совпало - создаем множество после создания контакта
@@ -77,5 +76,7 @@ public class ContactModificationTests extends TestBase {
     assertThat(after, equalTo(before.withModified(modifiedContact, contact))); //сравниваем множества по id и др. параметрам указанным в ContactData
     // 1. из старого множества удаляем последний контакт до модификации
     // 2. в старое множество добавляем модифицированный контакт
+
+    verifyContactListInUI(); // осуществляется проверка отображения списка контактов в UI и сравнение с БД если в VM options уазано -DverifyUI=true
   }
 }

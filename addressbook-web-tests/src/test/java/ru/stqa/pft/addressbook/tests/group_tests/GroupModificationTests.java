@@ -65,5 +65,7 @@ public class GroupModificationTests extends TestBase {
     assertThat(after, equalTo(before.withModified(modifiedGroup, group))); // сравниваем множества по именам и id,
                                                                            // 1. удалив модифицируемую группу из старого списка до модификации
                                                                            // 2. добавив модифицируемую группу с соответствующим id после модификации
+
+    verifyGroupListInUI(); // осуществляется проверка отображения списка групп в UI и сравнение с БД если в VM options уазано -DverifyUI=true
   }
 }

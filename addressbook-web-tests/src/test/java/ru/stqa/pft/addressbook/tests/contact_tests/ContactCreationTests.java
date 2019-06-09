@@ -49,7 +49,7 @@ public class ContactCreationTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    if (app.db().contacts().size() == 0) { //если множество групп пустое,то
+    if (app.db().groups().size() == 0) { //если множество групп пустое,то
       app.goTo().groupPage();
       app.group().create(new GroupData().withName("test1"));
     }
@@ -72,6 +72,8 @@ public class ContactCreationTests extends TestBase {
                                                                                                                               // 1. добавив в старый список контакт с макс. id и указанными параметрами;
                                                                                                                               // 2. находим max id - преобразуем after в поток, с помощью mapToInt преобразуем id элементы потока в числа (т.е. в кач-ве параметра принимает группу (g), а в кач-ве результата выдает id этой группы), находим max, передаем его в contact
 
+    verifyContactListInUI(); // осуществляется проверка отображения списка контактов в UI и сравнение с БД если в VM options уазано -DverifyUI=true
+
   }
 
   @Test ()
@@ -88,5 +90,7 @@ public class ContactCreationTests extends TestBase {
     assertThat(app.contact().count(), equalTo(before.size())); //hash предпроверка на то что кол-во контактов не поменялось (до создания множества after для ускорения, т.к. count быстрее создания множества, соотв. если кол-во поменялось - тест упадет быстрее)
     Contacts after = app.db().contacts(); //если кол-во не поменялось - тест идет дальше - создаем множество after
     assertThat(after, equalTo(before)); // проверка равенства множеств after и before по указанным в тесте параметрам и id
+
+    verifyContactListInUI(); // осуществляется проверка отображения списка контактов в UI и сравнение с БД если в VM options уазано -DverifyUI=true
   }
 }
