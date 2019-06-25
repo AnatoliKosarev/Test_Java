@@ -5,11 +5,10 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @XStreamAlias("group") // для генератора, чтобы в файле тэг для GroupData вместо длинного названия пакета был просто group
 
@@ -53,6 +52,9 @@ public class GroupData {
   @Type(type = "text") // описание типа для преобразования для Hibernate
   private String footer;
 
+  @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER)
+  private Set<ContactData> contacts = new HashSet<ContactData>();
+
   public String getName() {
     return name;
   }
@@ -67,6 +69,10 @@ public class GroupData {
 
   public String getFooter() {
     return footer;
+  }
+
+  public Contacts getContatcts() {
+    return new Contacts(contacts);
   }
 
   public GroupData withId(int id) { //сеттер, возвращает тот объект в котором вызывался, после модификации

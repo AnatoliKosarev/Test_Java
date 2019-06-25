@@ -5,7 +5,9 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.File;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity // для привязки к БД для Hibernate
 @Table (name = "addressbook") // для привязки к таблице БД для Hibernate
@@ -52,8 +54,9 @@ public class ContactData {
   @Type(type = "text") // описание типа для преобразования для Hibernate
   private String email;
 
-  @Transient // для полей которые надо пропустить при выборке из БД для Hibernate
-  private String group;
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "address_in_groups", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
+  private Set<GroupData> groups = new HashSet<GroupData>();
 
   @Transient // для полей которые надо пропустить при выборке из БД для Hibernate
   private String contactDetails;
@@ -61,6 +64,8 @@ public class ContactData {
   @Column (name = "photo") // для привязки к столбцу в таблице БД для Hibernate
   @Type(type = "text") // описание типа для преобразования для Hibernate
   private String photo; // т.к. в таблице БД хранится в виде строки
+
+
 
   public ContactData withId(int id) {
     this.id = id;
@@ -104,11 +109,6 @@ public class ContactData {
 
   public ContactData withEmail(String email) {
     this.email = email;
-    return this;
-  }
-
-  public ContactData withGroupName(String group) {
-    this.group = group;
     return this;
   }
 
@@ -158,12 +158,39 @@ public class ContactData {
     return email;
   }
 
-  public String getGroup() {
-    return group;
+  public Groups getGroups() {
+    return new Groups(groups);
   }
 
   public String getContactDetails() {
     return contactDetails;
+  }
+
+  public File getPhoto() {
+    return new File(photo); // преобразуем в файл
+  }
+
+
+  public ContactData inGroup(GroupData group) {
+    groups.add(group);
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "ContactData{" +
+            "id=" + id +
+            ", firstname='" + firstname + '\'' +
+            ", lastname='" + lastname + '\'' +
+            ", address='" + address + '\'' +
+            ", homePhone='" + homePhone + '\'' +
+            ", mobilePhone='" + mobilePhone + '\'' +
+            ", workPhone='" + workPhone + '\'' +
+            ", allPhones='" + allPhones + '\'' +
+            ", email='" + email + '\'' +
+            ", groups=" + groups +
+            ", contactDetails='" + contactDetails + '\'' +
+            '}';
   }
 
   @Override
@@ -180,34 +207,12 @@ public class ContactData {
             Objects.equals(workPhone, that.workPhone) &&
             Objects.equals(allPhones, that.allPhones) &&
             Objects.equals(email, that.email) &&
+            Objects.equals(groups, that.groups) &&
             Objects.equals(contactDetails, that.contactDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, firstname, lastname, address, homePhone, mobilePhone, workPhone, allPhones, email, contactDetails);
+    return Objects.hash(id, firstname, lastname, address, homePhone, mobilePhone, workPhone, allPhones, email, groups, contactDetails);
   }
-
-  @Override
-  public String toString() {
-    return "ContactData{" +
-            "id=" + id +
-            ", firstname='" + firstname + '\'' +
-            ", lastname='" + lastname + '\'' +
-            ", address='" + address + '\'' +
-            ", homePhone='" + homePhone + '\'' +
-            ", mobilePhone='" + mobilePhone + '\'' +
-            ", workPhone='" + workPhone + '\'' +
-            ", allPhones='" + allPhones + '\'' +
-            ", email='" + email + '\'' +
-            ", group='" + group + '\'' +
-            ", contactDetails='" + contactDetails + '\'' +
-            ", photo='" + photo + '\'' +
-            '}';
-  }
-
-  public File getPhoto() {
-    return new File(photo); // преобразуем в файл
-  }
-
 }

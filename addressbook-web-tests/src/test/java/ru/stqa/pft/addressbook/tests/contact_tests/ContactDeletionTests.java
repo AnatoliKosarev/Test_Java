@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 import ru.stqa.pft.addressbook.tests.TestBase;
 
 import java.io.File;
@@ -22,12 +23,11 @@ public class ContactDeletionTests extends TestBase {
     }
 
     if (app.db().contacts().size() == 0) { //если множество контактов пустое,то
-      app.goTo().groupPage();
-      String groupName = app.contact().getGroupName().getGroup();
+      Groups groups = app.db().groups();
       File photo = new File("src/test/resources/stru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
       app.goTo().HomePage();
       app.contact().create(new ContactData().withFirstname("test name 1").withLastname("test last name 1").withAddress("City 1, Str. 2, Bl. 3, App. 4").
-              withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withPhoto(photo).withGroupName(groupName), true);
+              withHomePhone("123").withMobilePhone("456").withWorkPhone("789").withEmail("test_ignore@test.com").withPhoto(photo).inGroup(groups.iterator().next()), true);
     }
   }
 

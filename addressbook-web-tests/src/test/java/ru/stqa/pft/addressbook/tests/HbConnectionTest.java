@@ -40,6 +40,7 @@ public class HbConnectionTest {
     // выборку делаем только для не удаленных контактов - т.к. в БД отображаются удаленные с датой в Deprecated столбце - мы выводим deprecated с нулями, т.е. те которые не удалены
     for ( ContactData contact : result ) { // пробегаемся по списку переменной group
       System.out.println(contact); // выводим прочитанные данные на консоль
+      System.out.println(contact.getGroups());
     }
     session.getTransaction().commit();
     session.close(); // закрытие сессии

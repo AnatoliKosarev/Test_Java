@@ -37,4 +37,12 @@ public class DbHelper {
     session.close(); // закрытие сессии
     return new Contacts(result);
   }
+
+  public Contacts contactsInGroups() {
+    Session session = sessionFactory.openSession(); // создаем локальную переменную seesion, в которой проводим инициализацию, начинаем сессию
+    session.beginTransaction();
+    List<ContactData> result = session.createQuery( "from address_in_groups" ).list(); // создаем список типа ContactData в который записываем данные по результатам выборки
+    session.close(); // закрытие сессии
+    return new Contacts(result);
+  }
 }

@@ -2,8 +2,6 @@ package ru.stqa.pft.addressbook.tests.contact_tests;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -58,13 +56,11 @@ public class ContactCreationTests extends TestBase {
   @Test (dataProvider = "validContactsFromJson")
   public void testContactCreation(ContactData contact) {
 
-    app.goTo().groupPage();
-    String groupName = app.contact().getGroupName().getGroup();
     app.goTo().HomePage();
-    Contacts before = app.db().contacts(); //создаем множество до создания контакта
+    Groups groups = app.db().groups();
     File photo = new File("src/test/resources/stru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
-    app.contact().create(contact.withGroupName(groupName).withPhoto(photo), true); // передаем методу create параметр из провайдера тестовых данных, имя сущ. группы и фото
-
+    Contacts before = app.db().contacts(); //создаем множество до создания контакта
+    app.contact().create(contact.inGroup(groups.iterator().next()).withPhoto(photo), true); // передаем методу create параметр из провайдера тестовых данных, имя сущ. группы и фото
     assertThat(app.contact().count(), equalTo(before.size()+1)); //hash предпроверка - сравниваем кол-во элементов после добавления контакта со старым списком+1
     Contacts after = app.db().contacts(); //если кол-во совпало - создаем множество после создания контакта
 
@@ -79,13 +75,12 @@ public class ContactCreationTests extends TestBase {
   @Test ()
   public void testBadContactCreation() { // негативный тест - контакт с апострофом в FirstName не должен создаваться, соотв. списки должны быть равны
 
-    app.goTo().groupPage();
-    String groupName = app.contact().getGroupName().getGroup();
     app.goTo().HomePage();
-    Contacts before = app.db().contacts(); //создаем множество до создания контакта
+    Groups groups = app.db().groups();
     File photo = new File("src/test/resources/stru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
+    ContactData contact = new ContactData().withFirstname("test name 1'").inGroup(groups.iterator().next()).withPhoto(photo); // не валидный символ '
+    Contacts before = app.db().contacts(); //создаем множество до создания контакта
     app.contact().initContactCreation();
-    ContactData contact = new ContactData().withFirstname("test name 1'").withGroupName(groupName).withPhoto(photo); // не валидный символ '
     app.contact().create(contact, true);
     assertThat(app.contact().count(), equalTo(before.size())); //hash предпроверка на то что кол-во контактов не поменялось (до создания множества after для ускорения, т.к. count быстрее создания множества, соотв. если кол-во поменялось - тест упадет быстрее)
     Contacts after = app.db().contacts(); //если кол-во не поменялось - тест идет дальше - создаем множество after

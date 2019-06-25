@@ -7,11 +7,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
-import ru.stqa.pft.addressbook.tests.contact_tests.ContactEditFormTests;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ContactHelper extends HelperBase {
   public ContactHelper(WebDriver driver) {
@@ -23,17 +20,20 @@ public class ContactHelper extends HelperBase {
   }
 
   public void fillContactForm(ContactData contactData, boolean creation) {
-    type(By.name("firstname"),contactData.getFirstname());
-    type(By.name("lastname"),contactData.getLastname());
+    type(By.name("firstname"), contactData.getFirstname());
+    type(By.name("lastname"), contactData.getLastname());
     attach(By.name("photo"), contactData.getPhoto());
-    type(By.name("address"),contactData.getAddress());
-    type(By.name("home"),contactData.getHomePhone());
-    type(By.name("mobile"),contactData.getMobilePhone());
-    type(By.name("work"),contactData.getWorkPhone());
-    type(By.name("email"),contactData.getEmail());
+    type(By.name("address"), contactData.getAddress());
+    type(By.name("home"), contactData.getHomePhone());
+    type(By.name("mobile"), contactData.getMobilePhone());
+    type(By.name("work"), contactData.getWorkPhone());
+    type(By.name("email"), contactData.getEmail());
 
     if (creation) { //если creation = true проверяем, что на странице есть элемент "new group", выбираем его
-      new Select(driver.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
+      if (contactData.getGroups().size() > 0) {
+        Assert.assertTrue(contactData.getGroups().size() == 1);
+        new Select(driver.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
+      }
     } else { //если creation = false (not creation) проверяем, что на странице нет элемента "new group"
       Assert.assertFalse(isElementPresent(By.name("new_group")));
     }
@@ -180,8 +180,13 @@ public class ContactHelper extends HelperBase {
     return new ContactData().withContactDetails(contactInfo); //возвращаем полученный текст
   }
 
-  public ContactData getGroupName () { //берем любое существующее имя группы из существующего списка
+  public void addContactToGroup(int id) {
+    driver.findElement(By.xpath("//select[@name = 'to_group']/option[@value ='"+ id +"']")).click();
+    driver.findElement(By.name("add")).click();
+  }
+
+  /*public ContactData getGroupName () { //берем любое существующее имя группы из существующего списка
     String groupName = driver.findElement(By.className("group")).getText();
     return new ContactData().withGroupName(groupName);
-  }
+  }*/
 }
