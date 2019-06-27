@@ -185,6 +185,16 @@ public class ContactHelper extends HelperBase {
     driver.findElement(By.name("add")).click();
   }
 
+  public void selectContactsGroup(int id) {
+    driver.findElement(By.xpath("//select[@name = 'group']/option[@value = '"+ id +"']")).click();
+  }
+
+  public void removeContactFromGroup() {
+    driver.findElement(By.name("remove")).click();
+  }
+
+
+
   /*public ContactData getGroupName () { //берем любое существующее имя группы из существующего списка
     String groupName = driver.findElement(By.className("group")).getText();
     return new ContactData().withGroupName(groupName);

@@ -11,10 +11,12 @@ import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
 import ru.stqa.pft.addressbook.tests.TestBase;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.acl.Group;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -68,8 +70,10 @@ public class ContactModificationTests extends TestBase {
     ContactData modifiedContact = before.iterator().next(); //последовательно перебираем элементы, выбираем первый попавшийся элемент множества
     File photo = new File("src/test/resources/modstru.png"); // инициализируем переменную типа File - указываем относительный путь к файлу с картинкой
     app.goTo().HomePage();
-    app.contact().modify(modifiedContact.withId(modifiedContact.getId()).withPhoto(photo).inGroup(modifiedContact.getGroups().iterator().next().)); // передаем методу modify параметр из провайдера тестовых данных
+    app.contact().modify(modifiedContact.withId(modifiedContact.getId()).withPhoto(photo).inGroup(modifiedContact.getGroups().iterator().next())); // передаем методу modify параметр из провайдера тестовых данных
     // и id группы из объекта modifiedContact из списка before (до модификации), modified photo
+
+
 
     assertThat(app.contact().count(), equalTo(before.size())); //hash предпроверка - сравниваем кол-во элементов после модификации контакта со старым списком
     Contacts after = app.db().contacts(); //если кол-во совпало - создаем множество после создания контакта
