@@ -31,7 +31,7 @@ public class ContactRemovedFromGroupTests extends TestBase {
     }
   }
 
-  @Test
+  @Test (enabled = false)
   public void testContactRemovedFromGroup() {
     Contacts before = app.db().contacts();
 

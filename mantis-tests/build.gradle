@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.testng:testng:6.14.3'
+    compile 'org.seleniumhq.selenium:selenium-java:3.141.59'
+    compile 'org.hamcrest:hamcrest:2.1'
+}
+
+test {
+    useTestNG {
+        suites 'src/test/resources/testng.xml'
+    }
+    if (project.hasProperty('browser')) { // если в терминале указан браузер - используется он (gradle -Pbrowser=firefox testContacts), если нет - дефолтный из TestBase
+        systemProperty 'browser', "${browser}"
+    }
+    if (project.hasProperty('target')) { // если в терминале указано св-во target - используется конф. файл указанный после него, если нет - дефолтный из App.Manager
+        systemProperty 'target', "${target}"
+    }
+    if (project.hasProperty('verifyUI')) { // если в терминале указано св-во verifyUI=true - осуществляется проверка отображения списка групп в UI и сравнение с БД
+        systemProperty 'verifyUI', "${verifyUI}"
+    }
+}
