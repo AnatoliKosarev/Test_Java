@@ -17,6 +17,7 @@ public class ApplicationManager {
   private WebDriver driver; // чтобы никто напрямую не обратился к driver, только через метод getDriver - делаем переменную private
   private String browser;
   private RegistrationHelper registrationHelper;
+  private FtpHelper ftp;
 
 
   public ApplicationManager(String browser) {
@@ -49,6 +50,13 @@ public class ApplicationManager {
       registrationHelper = new RegistrationHelper(this); //в качестве параметра передаем ссылку на ApplicationManager
     }
     return registrationHelper;
+  }
+
+  public FtpHelper ftp() {
+    if (ftp == null) { //инициализируем FtpHelper только если он уже не был проинициализирован
+      ftp = new FtpHelper(this); //в качестве параметра передаем ссылку на ApplicationManager
+    }
+    return ftp;
   }
 
   public WebDriver getDriver() {
