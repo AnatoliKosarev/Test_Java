@@ -24,7 +24,7 @@ public class RegistrationTests extends TestBase {
   public void testRegistration() throws IOException, MessagingException {
     long now = System.currentTimeMillis(); // уникальный идентификатор (текущее время до милисекунды с 1970г.)
     String email = String.format("user%s@localhost.localdomain", now); // email с уникальным идентификатором
-    String user = String.format("user1%s", now); // имя пользователя с уникальным идентификатором
+    String user = String.format("user%s", now); // имя пользователя с уникальным идентификатором
     String password = "password";
     app.james().createUser(user, password); // создаем пользователя на удаленном почтовом сервере
     app.registration().start(user, email);
